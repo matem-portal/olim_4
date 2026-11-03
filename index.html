@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>🌸 Magiczna Kraina Matematyki — Klasa 4</title>
 
   <!-- Tailwind CSS -->
@@ -25,6 +25,7 @@
     body {
       font-family: 'Nunito', sans-serif;
       background: linear-gradient(135deg, #fff0f5 0%, #fdf2f8 35%, #f5f3ff 70%, #ecfeff 100%);
+      -webkit-tap-highlight-color: transparent;
     }
     h1, h2, h3, .magic-heading {
       font-family: 'Comfortaa', cursive;
@@ -38,6 +39,14 @@
     .glow-pink {
       box-shadow: 0 0 25px -5px rgba(244, 63, 94, 0.25);
     }
+    /* Mobile scrollbar hiding for smooth swipe tabs */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
     @media print {
       .no-print { display: none !important; }
       body { background: white !important; }
@@ -45,209 +54,228 @@
     }
   </style>
 </head>
-<body class="min-h-screen text-slate-800 antialiased flex flex-col selection:bg-pink-300 selection:text-pink-900">
+<body class="min-h-screen text-slate-800 antialiased flex flex-col selection:bg-pink-300 selection:text-pink-900 pb-20 sm:pb-6">
 
-  <!-- Top Hero Bar -->
-  <header class="bg-gradient-to-r from-pink-400 via-rose-400 to-purple-500 text-white shadow-lg no-print py-5 px-4 sticky top-0 z-40">
-    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-      <div class="text-center md:text-left">
-        <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-black tracking-wide mb-1 text-pink-50 border border-white/30">
-          <span>🦄 Klasa 4</span>
-          <span>•</span>
-          <span>Systemy zapisywania liczb</span>
-          <span>•</span>
-          <span>Zabawa i nauka! ✨</span>
+  <!-- Top Hero Bar (Mobile Optimized) -->
+  <header class="bg-gradient-to-r from-pink-400 via-rose-400 to-purple-500 text-white shadow-md no-print py-3 sm:py-4 px-3 sm:px-4 sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl sm:text-3xl animate-bounce">🌸</span>
+        <div>
+          <h1 class="text-base sm:text-xl font-black tracking-wide drop-shadow-sm leading-tight magic-heading">
+            Magiczna Matematyka
+          </h1>
+          <p class="text-[10px] sm:text-xs text-pink-100 font-bold hidden sm:block">
+            Klasa 4 • Zabawa i nauka na 6! ✨
+          </p>
         </div>
-        <h1 class="text-xl sm:text-2xl font-black tracking-wide drop-shadow-sm flex items-center justify-center md:justify-start gap-2">
-          <span>🌸 Magiczna Kraina Matematyki</span>
-        </h1>
       </div>
 
-      <!-- Gamification Counters -->
-      <div class="flex items-center gap-3">
-        <div class="bg-white/20 backdrop-blur-md px-3.5 py-1.5 rounded-2xl border border-white/30 flex items-center gap-2 shadow-inner">
-          <span class="text-xl animate-bounce">💎</span>
+      <!-- Gamification Counters & Actions -->
+      <div class="flex items-center gap-1.5 sm:gap-2">
+        <div class="bg-white/20 backdrop-blur-md px-2.5 sm:px-3 py-1 rounded-2xl border border-white/30 flex items-center gap-1.5 shadow-inner">
+          <span class="text-base sm:text-lg">💎</span>
           <div>
-            <div class="text-[10px] uppercase font-bold text-pink-100">Kryształki</div>
-            <div id="score-counter" class="text-lg font-black text-white leading-none">0 / 150</div>
+            <div class="text-[8px] sm:text-[9px] uppercase font-extrabold text-pink-100 leading-none">Kryształki</div>
+            <div id="score-counter" class="text-xs sm:text-base font-black text-white leading-tight">0 / 180</div>
           </div>
         </div>
 
-        <button onclick="openSendReportModal()" class="px-3.5 py-2 bg-white text-rose-600 hover:bg-rose-50 active:scale-95 font-extrabold rounded-2xl shadow-md transition text-xs flex items-center gap-1.5 border border-pink-200">
+        <button onclick="openSendReportModal()" class="px-2.5 sm:px-3 py-1.5 bg-white text-rose-600 hover:bg-rose-50 active:scale-95 font-black rounded-xl sm:rounded-2xl shadow transition text-[11px] sm:text-xs flex items-center gap-1 border border-pink-200 min-h-[38px]">
           <span>💌</span>
-          <span>Wyślij wyniki</span>
+          <span class="hidden sm:inline">Wyślij</span>
         </button>
 
-        <button onclick="playCelebration()" class="px-3.5 py-2 bg-amber-300 hover:bg-amber-200 active:scale-95 text-amber-950 font-black rounded-2xl shadow transition text-xs flex items-center gap-1.5 border border-amber-400">
-          <span>🎆</span>
-          <span>Iskierki</span>
+        <button onclick="playCelebration()" class="px-2.5 sm:px-3 py-1.5 bg-amber-300 hover:bg-amber-200 active:scale-95 text-amber-950 font-black rounded-xl sm:rounded-2xl shadow transition text-[11px] sm:text-xs flex items-center gap-1 min-h-[38px]">
+          <span>✨</span>
         </button>
 
-        <button onclick="window.print()" class="px-3 py-2 bg-white/10 hover:bg-white/20 active:scale-95 text-white font-bold rounded-2xl border border-white/25 transition text-xs">
+        <button onclick="window.print()" class="hidden md:inline-flex px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white font-bold rounded-2xl border border-white/25 transition text-xs">
           🖨️ PDF
         </button>
       </div>
     </div>
   </header>
 
-  <!-- Topic Selector -->
-  <section class="max-w-6xl mx-auto px-4 mt-6 w-full no-print">
-    <div class="bg-white/80 backdrop-blur-lg p-2.5 sm:p-3 rounded-3xl border border-pink-200/70 shadow-sm flex flex-wrap gap-2">
-      <button onclick="selectTopic(1)" id="btn-topic-1" class="topic-btn flex-1 min-w-[150px] py-2.5 px-3 rounded-2xl font-extrabold text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5 bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-md">
+  <!-- Topic Selector (Horizontal scroll on mobile with swipe indicator) -->
+  <section class="max-w-6xl mx-auto px-2 sm:px-4 mt-3 sm:mt-5 w-full no-print">
+    <div class="flex items-center justify-between text-[11px] font-bold text-pink-500 mb-1 px-1 sm:hidden">
+      <span>Wybierz temat (przesuń w bok 👈 👉)</span>
+      <span id="topic-indicator-badge" class="bg-pink-100 text-pink-700 px-2 py-0.5 rounded-full text-[10px]">Temat 1 z 6</span>
+    </div>
+    <div class="bg-white/90 backdrop-blur-lg p-1.5 sm:p-2.5 rounded-2xl sm:rounded-3xl border border-pink-200/70 shadow-sm flex overflow-x-auto no-scrollbar gap-1.5 scroll-smooth">
+      <button onclick="selectTopic(1)" id="btn-topic-1" class="topic-btn shrink-0 py-2 sm:py-2.5 px-3 rounded-xl sm:rounded-2xl font-extrabold text-xs transition-all flex items-center gap-1.5 bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-sm min-h-[42px]">
         <span>🔢</span>
         <span>1. System dziesiątkowy</span>
       </button>
-      <button onclick="selectTopic(2)" id="btn-topic-2" class="topic-btn flex-1 min-w-[150px] py-2.5 px-3 rounded-2xl font-bold text-xs sm:text-sm text-slate-600 hover:bg-pink-50 transition-all flex items-center justify-center gap-1.5">
+      <button onclick="selectTopic(2)" id="btn-topic-2" class="topic-btn shrink-0 py-2 sm:py-2.5 px-3 rounded-xl sm:rounded-2xl font-bold text-xs text-slate-600 hover:bg-pink-50 transition-all flex items-center gap-1.5 min-h-[42px]">
         <span>⚖️</span>
-        <span>2. Porównywanie liczb</span>
+        <span>2. Porównywanie</span>
       </button>
-      <button onclick="selectTopic(3)" id="btn-topic-3" class="topic-btn flex-1 min-w-[150px] py-2.5 px-3 rounded-2xl font-bold text-xs sm:text-sm text-slate-600 hover:bg-pink-50 transition-all flex items-center justify-center gap-1.5">
+      <button onclick="selectTopic(3)" id="btn-topic-3" class="topic-btn shrink-0 py-2 sm:py-2.5 px-3 rounded-xl sm:rounded-2xl font-bold text-xs text-slate-600 hover:bg-pink-50 transition-all flex items-center gap-1.5 min-h-[42px]">
         <span>🎯</span>
-        <span>3. Rachunki (z zerami!)</span>
+        <span>3. Zera i rachunki</span>
       </button>
-      <button onclick="selectTopic(4)" id="btn-topic-4" class="topic-btn flex-1 min-w-[150px] py-2.5 px-3 rounded-2xl font-bold text-xs sm:text-sm text-slate-600 hover:bg-pink-50 transition-all flex items-center justify-center gap-1.5">
+      <button onclick="selectTopic(4)" id="btn-topic-4" class="topic-btn shrink-0 py-2 sm:py-2.5 px-3 rounded-xl sm:rounded-2xl font-bold text-xs text-slate-600 hover:bg-pink-50 transition-all flex items-center gap-1.5 min-h-[42px]">
         <span>💰</span>
         <span>4. Złote i grosze</span>
       </button>
-      <button onclick="selectTopic(5)" id="btn-topic-5" class="topic-btn flex-1 min-w-[150px] py-2.5 px-3 rounded-2xl font-bold text-xs sm:text-sm text-slate-600 hover:bg-pink-50 transition-all flex items-center justify-center gap-1.5">
+      <button onclick="selectTopic(5)" id="btn-topic-5" class="topic-btn shrink-0 py-2 sm:py-2.5 px-3 rounded-xl sm:rounded-2xl font-bold text-xs text-slate-600 hover:bg-pink-50 transition-all flex items-center gap-1.5 min-h-[42px]">
         <span>📏</span>
-        <span>5. Jednostki długości</span>
+        <span>5. Długości</span>
+      </button>
+      <button onclick="selectTopic(6)" id="btn-topic-6" class="topic-btn shrink-0 py-2 sm:py-2.5 px-3 rounded-xl sm:rounded-2xl font-bold text-xs text-slate-600 hover:bg-pink-50 transition-all flex items-center gap-1.5 min-h-[42px]">
+        <span>⚖️</span>
+        <span>6. Jednostki masy</span>
       </button>
     </div>
   </section>
 
-  <!-- Difficulty Levels Pills & Progress -->
-  <section class="max-w-6xl mx-auto px-4 mt-4 w-full no-print">
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white/70 p-3 rounded-2xl border border-pink-100">
-      <div class="flex items-center gap-2">
-        <span class="text-xs font-black text-rose-500 uppercase tracking-wider mr-1">Poziom:</span>
-        <button onclick="selectLevel(1)" id="lvl-btn-1" class="lvl-btn px-3 py-1.5 rounded-xl text-xs font-extrabold bg-pink-100 text-pink-700 hover:bg-pink-200 transition">
-          ⭐ Poziom 1 (Łatwy)
+  <!-- Difficulty Levels Pills & Progress (Touch-first) -->
+  <section class="max-w-6xl mx-auto px-2 sm:px-4 mt-2 sm:mt-3 w-full no-print">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-white/80 p-2 sm:p-3 rounded-2xl border border-pink-100 shadow-sm">
+      <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+        <span class="text-[10px] sm:text-xs font-black text-rose-500 uppercase tracking-wider mr-0.5 shrink-0">Poziom:</span>
+        <button onclick="selectLevel(1)" id="lvl-btn-1" class="lvl-btn shrink-0 px-2.5 sm:px-3 py-1.5 rounded-xl text-[11px] sm:text-xs font-black bg-pink-500 text-white shadow transition min-h-[38px]">
+          ⭐ Łatwy
         </button>
-        <button onclick="selectLevel(2)" id="lvl-btn-2" class="lvl-btn px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-pink-50 transition">
-          🔮 Poziom 2 (Średni)
+        <button onclick="selectLevel(2)" id="lvl-btn-2" class="lvl-btn shrink-0 px-2.5 sm:px-3 py-1.5 rounded-xl text-[11px] sm:text-xs font-bold text-slate-600 hover:bg-pink-50 transition min-h-[38px]">
+          🔮 Średni
         </button>
-        <button onclick="selectLevel(3)" id="lvl-btn-3" class="lvl-btn px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-pink-50 transition">
-          👑 Poziom 3 (Mistrzyni)
+        <button onclick="selectLevel(3)" id="lvl-btn-3" class="lvl-btn shrink-0 px-2.5 sm:px-3 py-1.5 rounded-xl text-[11px] sm:text-xs font-bold text-slate-600 hover:bg-pink-50 transition min-h-[38px]">
+          👑 Mistrzyni
         </button>
       </div>
 
       <!-- Quick Progress Bar -->
-      <div class="flex items-center gap-2 min-w-[180px]">
-        <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
+      <div class="flex items-center gap-2 min-w-[130px] sm:min-w-[180px] px-1">
+        <div class="w-full bg-slate-200 h-2 sm:h-2.5 rounded-full overflow-hidden">
           <div id="sub-progress-bar" class="bg-gradient-to-r from-pink-500 to-rose-400 h-full w-0 transition-all duration-300"></div>
         </div>
-        <span id="sub-progress-text" class="text-xs font-bold text-pink-600 min-w-max">0 / 10</span>
+        <span id="sub-progress-text" class="text-[11px] sm:text-xs font-black text-pink-600 min-w-max">0 / 10</span>
       </div>
     </div>
   </section>
 
   <!-- Helpful Visual Reminder Banner -->
-  <section class="max-w-6xl mx-auto px-4 mt-4 w-full">
-    <div id="topic-helper" class="bg-white border-2 border-pink-200 rounded-2xl p-4 shadow-sm text-xs sm:text-sm text-slate-700 flex items-start gap-3">
+  <section class="max-w-6xl mx-auto px-2 sm:px-4 mt-2 sm:mt-3 w-full">
+    <div id="topic-helper" class="bg-white border-2 border-pink-200 rounded-2xl p-3 sm:p-4 shadow-sm text-xs sm:text-sm text-slate-700 flex items-start gap-2.5">
       <!-- Injected by JS -->
     </div>
   </section>
 
   <!-- Tasks Grid -->
-  <main class="max-w-6xl mx-auto px-4 py-6 flex-1 w-full">
-    <div id="cards-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <main class="max-w-6xl mx-auto px-2 sm:px-4 py-3 sm:py-6 flex-1 w-full">
+    <div id="cards-container" class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
       <!-- 10 Tasks rendered by JS -->
     </div>
 
     <!-- Motivational Box -->
-    <div class="mt-8 text-center p-6 bg-gradient-to-r from-pink-100 via-purple-50 to-rose-100 rounded-3xl border border-pink-200 shadow-sm">
-      <div class="text-3xl mb-1">🍭 🦄 🌟</div>
-      <h3 class="text-base sm:text-lg font-black text-rose-800 magic-heading">Świetnie Ci idzie, jesteś super!</h3>
+    <div class="mt-6 sm:mt-8 text-center p-4 sm:p-6 bg-gradient-to-r from-pink-100 via-purple-50 to-rose-100 rounded-3xl border border-pink-200 shadow-sm">
+      <div class="text-2xl sm:text-3xl mb-1">🍭 🦄 🌟</div>
+      <h3 class="text-sm sm:text-lg font-black text-rose-800 magic-heading">Wspaniale Ci idzie!</h3>
       <p class="text-xs sm:text-sm text-slate-600 mt-1 max-w-lg mx-auto">
-        Rozwiązuj po kolei, wpisuj odpowiedzi w białe okienka lub wybieraj właściwe przyciski. Gdy masz rację — usłyszysz magiczny dzwoneczek i pole zaświeci się na zielono!
+        Wpisuj odpowiedzi w okienka lub dotykaj kolorowych przycisków. Zielony kolor i dźwięk oznaczają sukces!
       </p>
-      <div class="mt-4">
-        <button onclick="openSendReportModal()" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-pink-500 via-rose-500 to-purple-500 text-white font-black text-sm rounded-2xl shadow-lg hover:shadow-xl active:scale-95 transition-all border border-white/40">
-          <span>💌 Zakończ trening i wyślij raport do Pani Violetty</span>
+      <div class="mt-3 sm:mt-4">
+        <button onclick="openSendReportModal()" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-pink-500 via-rose-500 to-purple-500 text-white font-black text-xs sm:text-sm rounded-2xl shadow-lg hover:shadow-xl active:scale-95 transition-all border border-white/40 min-h-[46px]">
+          <span>💌 Wyślij raport wyników do Pani Violetty</span>
         </button>
       </div>
     </div>
   </main>
 
-  <!-- Sticky Bottom Summary Floating Banner -->
-  <div class="fixed bottom-4 right-4 z-40 no-print">
+  <!-- Sticky Mobile Bottom Bar -->
+  <div class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-pink-200 p-2 sm:hidden flex items-center justify-between no-print shadow-lg">
+    <div class="flex items-center gap-2 pl-2">
+      <span class="text-lg">💎</span>
+      <span id="mobile-bottom-score" class="text-xs font-black text-rose-600">0 / 180</span>
+    </div>
+    <button onclick="openSendReportModal()" class="px-4 py-2 bg-gradient-to-r from-pink-500 to-rose-600 active:scale-95 text-white font-black text-xs rounded-xl shadow-md flex items-center gap-1.5 border border-pink-300">
+      <span>💌</span>
+      <span>Wyślij wyniki</span>
+      <span id="floating-badge-mobile" class="ml-1 bg-white text-rose-600 text-[10px] px-1.5 py-0.2 rounded-full font-black">0</span>
+    </button>
+  </div>
+
+  <!-- Sticky Bottom Summary Floating Banner (Desktop) -->
+  <div class="hidden sm:block fixed bottom-4 right-4 z-40 no-print">
     <button onclick="openSendReportModal()" class="px-4 py-3 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-black text-xs sm:text-sm rounded-2xl shadow-xl flex items-center gap-2 border-2 border-white/80 transition-all">
       <span>✉️</span>
-      <span class="hidden sm:inline">Wyślij na:</span>
+      <span>Wyślij na:</span>
       <span class="underline">violettamaruk@gmail.com</span>
       <span id="floating-badge" class="ml-1 bg-white text-rose-600 text-xs px-2 py-0.5 rounded-full font-black">0 odp.</span>
     </button>
   </div>
 
   <!-- Modal do wysyłki wyników na e-mail -->
-  <div id="email-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm no-print">
-    <div class="bg-white w-full max-w-lg rounded-3xl p-6 shadow-2xl border-2 border-pink-300 relative max-h-[90vh] flex flex-col justify-between">
-      <button onclick="closeSendReportModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-xl font-bold w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">✕</button>
+  <div id="email-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-sm no-print">
+    <div class="bg-white w-full max-w-lg rounded-3xl p-4 sm:p-6 shadow-2xl border-2 border-pink-300 relative max-h-[92vh] flex flex-col justify-between overflow-y-auto">
+      <button onclick="closeSendReportModal()" class="absolute top-3.5 right-3.5 text-slate-400 hover:text-slate-600 text-lg font-bold w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">✕</button>
 
       <div>
-        <div class="flex items-center gap-2 mb-2">
+        <div class="flex items-center gap-2 mb-1.5">
           <span class="text-2xl">💌</span>
-          <h2 class="text-lg font-black text-rose-700 magic-heading">Raport wyników z matematyki</h2>
+          <h2 class="text-base sm:text-lg font-black text-rose-700 magic-heading">Raport wyników z matematyki</h2>
         </div>
-        <p class="text-xs text-slate-500 mb-4">
-          Wszystkie udzielone odpowiedzi zostaną sformatowane i wysłane bezpośrednio na adres: <strong class="text-rose-600">violettamaruk@gmail.com</strong>
+        <p class="text-[11px] sm:text-xs text-slate-500 mb-3">
+          Wszystkie odpowiedzi zostaną przesłane na adres: <strong class="text-rose-600">violettamaruk@gmail.com</strong>
         </p>
 
         <!-- Dane uczennicy -->
-        <div class="space-y-3 mb-4">
+        <div class="space-y-2 sm:space-y-3 mb-3">
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Imię i nazwisko uczennicy:</label>
-            <input type="text" id="student-name" placeholder="np. Marysia Kowalska (klasa 4A)" class="w-full text-xs sm:text-sm p-2.5 rounded-xl border border-pink-200 bg-pink-50/40 focus:outline-none focus:ring-2 focus:ring-pink-400 font-semibold text-slate-800">
+            <label class="block text-[11px] sm:text-xs font-bold text-slate-700 mb-1">Imię uczennicy:</label>
+            <input type="text" id="student-name" placeholder="np. Marysia (klasa 4)" class="w-full text-xs sm:text-sm p-2 sm:p-2.5 rounded-xl border border-pink-200 bg-pink-50/40 focus:outline-none focus:ring-2 focus:ring-pink-400 font-semibold text-slate-800 min-h-[40px]">
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Krótki komentarz / nastrój (opcjonalnie):</label>
-            <input type="text" id="student-comment" placeholder="np. Zadania z zerami były super proste! 🌸" class="w-full text-xs sm:text-sm p-2.5 rounded-xl border border-pink-200 bg-pink-50/40 focus:outline-none focus:ring-2 focus:ring-pink-400 font-semibold text-slate-800">
+            <label class="block text-[11px] sm:text-xs font-bold text-slate-700 mb-1">Krótki komentarz / nastrój (opcjonalnie):</label>
+            <input type="text" id="student-comment" placeholder="np. Zadania z wagą były super ciekawe! 🌸" class="w-full text-xs sm:text-sm p-2 sm:p-2.5 rounded-xl border border-pink-200 bg-pink-50/40 focus:outline-none focus:ring-2 focus:ring-pink-400 font-semibold text-slate-800 min-h-[40px]">
           </div>
         </div>
 
         <!-- Podsumowanie statystyk -->
-        <div class="p-3 bg-gradient-to-r from-pink-50 to-purple-50 rounded-2xl border border-pink-100 flex items-center justify-around text-center text-xs mb-4">
+        <div class="p-2.5 sm:p-3 bg-gradient-to-r from-pink-50 to-purple-50 rounded-2xl border border-pink-100 flex items-center justify-around text-center text-xs mb-3">
           <div>
-            <div class="text-slate-400 font-bold uppercase text-[10px]">Poprawne (💎)</div>
-            <div id="modal-correct-count" class="text-base font-black text-emerald-600">0</div>
+            <div class="text-slate-400 font-bold uppercase text-[9px] sm:text-[10px]">Poprawne (💎)</div>
+            <div id="modal-correct-count" class="text-sm sm:text-base font-black text-emerald-600">0</div>
           </div>
-          <div class="border-l border-pink-200 h-8"></div>
+          <div class="border-l border-pink-200 h-7 sm:h-8"></div>
           <div>
-            <div class="text-slate-400 font-bold uppercase text-[10px]">Wypełnione zadania</div>
-            <div id="modal-answered-count" class="text-base font-black text-rose-600">0</div>
+            <div class="text-slate-400 font-bold uppercase text-[9px] sm:text-[10px]">Wypełnione</div>
+            <div id="modal-answered-count" class="text-sm sm:text-base font-black text-rose-600">0</div>
           </div>
-          <div class="border-l border-pink-200 h-8"></div>
+          <div class="border-l border-pink-200 h-7 sm:h-8"></div>
           <div>
-            <div class="text-slate-400 font-bold uppercase text-[10px]">Łącznie zadań</div>
-            <div class="text-base font-black text-slate-700">150</div>
+            <div class="text-slate-400 font-bold uppercase text-[9px] sm:text-[10px]">Łącznie</div>
+            <div class="text-sm sm:text-base font-black text-slate-700">180</div>
           </div>
         </div>
 
         <!-- Podgląd tekstu raportu -->
         <div>
-          <label class="block text-[11px] font-bold text-slate-500 mb-1">Podgląd treści raportu:</label>
-          <textarea id="report-preview-box" readonly class="w-full h-28 text-[11px] font-mono p-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 resize-none"></textarea>
+          <label class="block text-[10px] sm:text-[11px] font-bold text-slate-500 mb-1">Podgląd treści wiadomości:</label>
+          <textarea id="report-preview-box" readonly class="w-full h-24 sm:h-28 text-[10px] sm:text-[11px] font-mono p-2 sm:p-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 resize-none"></textarea>
         </div>
       </div>
 
       <!-- Akcje -->
-      <div class="mt-4 pt-3 border-t border-slate-100 flex flex-col sm:flex-row gap-2">
-        <button onclick="sendViaMailto()" class="flex-1 py-3 px-4 bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 active:scale-95 text-white font-extrabold text-xs sm:text-sm rounded-xl shadow-md transition flex items-center justify-center gap-1.5">
+      <div class="mt-3 pt-2 sm:pt-3 border-t border-slate-100 flex flex-col sm:flex-row gap-2">
+        <button onclick="sendViaMailto()" class="flex-1 py-2.5 sm:py-3 px-4 bg-gradient-to-r from-pink-500 to-rose-600 active:scale-95 text-white font-black text-xs sm:text-sm rounded-xl shadow-md transition flex items-center justify-center gap-1.5 min-h-[44px]">
           <span>🚀 Otwórz pocztę i wyślij</span>
         </button>
-        <button onclick="copyReportToClipboard()" id="copy-report-btn" class="py-3 px-4 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 font-bold text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-1">
+        <button onclick="copyReportToClipboard()" id="copy-report-btn" class="py-2.5 sm:py-3 px-4 bg-slate-100 active:scale-95 text-slate-700 font-bold text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-1 min-h-[44px]">
           <span>📋 Kopiuj raport</span>
         </button>
       </div>
-      <div id="copy-status" class="hidden text-center text-xs text-emerald-600 font-bold mt-2">
+      <div id="copy-status" class="hidden text-center text-[11px] text-emerald-600 font-bold mt-1.5">
         ✓ Skopiowano do schowka! Możesz wkleić do wiadomości.
       </div>
     </div>
   </div>
 
-  <footer class="bg-white/80 border-t border-pink-200 py-4 text-center text-xs text-pink-600 no-print font-bold">
-    🌸 Klasa 4 • Matematyka z uśmiechem • 5 tematów po 3 poziomy (150 zadań) 💖
+  <footer class="bg-white/80 border-t border-pink-200 py-3 text-center text-[11px] text-pink-600 no-print font-bold hidden sm:block">
+    🌸 Klasa 4 • Matematyka z uśmiechem • 6 tematów po 3 poziomy (180 zadań) 💖
   </footer>
 
   <script>
@@ -296,14 +324,15 @@
     let currentLevel = 1;
     let solvedKeys = new Set();
     // System zbierania i utrwalania wszystkich odpowiedzi uczennicy
-    let studentResponses = {}; // format: { [uniqueKey]: { prompt, answer, expected, correct, timestamp, topicName, levelName } }
+    let studentResponses = {};
 
     const TOPIC_NAMES = {
       1: "1. System dziesiątkowy",
       2: "2. Porównywanie liczb",
       3: "3. Rachunki pamięciowe (z zerami)",
       4: "4. Złote i grosze",
-      5: "5. Jednostki długości"
+      5: "5. Jednostki długości",
+      6: "6. Jednostki masy"
     };
 
     const LEVEL_NAMES = {
@@ -312,7 +341,7 @@
       3: "Poziom 3 (Mistrzyni)"
     };
 
-    // 90 TASKS DATABASE (3 topics x 3 levels x 10 tasks)
+    // 180 TASKS DATABASE (6 topics x 3 levels x 10 tasks)
     const database = {
       // -------------------------------------------------------------------------
       // TEMAT 1: System dziesiątkowy (52 str.)
@@ -512,49 +541,96 @@
         { id: 8, prompt: "Zamień na centymetry: <strong>6 m 4 dm 5 cm</strong> to łącznie ile $cm$?", type: "input", ans: "645", hint: "600 cm + 40 cm + 5 cm = 645 cm." },
         { id: 9, prompt: "Rowerzysta pokonał 14 km, a pieszy 3 500 m. O ile metrów więcej pokonał rowerzysta?", type: "input", ans: "10500", hint: "14 000 m - 3 500 m = 10 500 m." },
         { id: 10, prompt: "Z deski o długości 2 m 40 cm odcięto 4 równe kawałki. Ile centymetrów ma każdy kawałek?", type: "input", ans: "60", hint: "240 cm : 4 = 60 cm." }
+      ],
+
+      // -------------------------------------------------------------------------
+      // TEMAT 6: Jednostki masy (73 str.) - NOWY TEMAT!
+      // -------------------------------------------------------------------------
+      "6_1": [
+        { id: 1, prompt: "Ile gramów ($g$) ma <strong>1 dekagram ($dag$)</strong>?", type: "choice", opts: ["10 g", "100 g", "1000 g"], ans: "10 g", hint: "1 dag = 10 g (np. cukierek waży około 1 dag, czyli 10 g)." },
+        { id: 2, prompt: "Ile dekagramów ($dag$) ma <strong>1 kilogram ($kg$)</strong>?", type: "choice", opts: ["10 dag", "100 dag", "1000 dag"], ans: "100 dag", hint: "1 kg to 100 dag." },
+        { id: 3, prompt: "Ile kilogramów ($kg$) ma <strong>1 tona ($t$)</strong>?", type: "choice", opts: ["100 kg", "500 kg", "1000 kg"], ans: "1000 kg", hint: "1 tona = 1000 kg (np. mały samochód waży około 1 tonę)." },
+        { id: 4, prompt: "Zamień na gramy: <strong>4 dag</strong> to ile $g$?", type: "input", ans: "40", hint: "4 · 10 g = 40 g." },
+        { id: 5, prompt: "Zamień na dekagramy: <strong>3 kg</strong> to ile $dag$?", type: "input", ans: "300", hint: "3 · 100 dag = 300 dag." },
+        { id: 6, prompt: "Ile gramów ma <strong>1 kilogram ($kg$)</strong>?", type: "choice", opts: ["100 g", "500 g", "1000 g"], ans: "1000 g", hint: "1 kg = 1000 g." },
+        { id: 7, prompt: "Tabliczka czekolady waży 100 g. Ile to dekagramów ($dag$)?", type: "input", ans: "10", hint: "100 : 10 = 10 dag." },
+        { id: 8, prompt: "Paczka mąki waży 2 kg. Ile to dekagramów ($dag$)?", type: "input", ans: "200", hint: "2 · 100 = 200 dag." },
+        { id: 9, prompt: "Słonik waży 2 t. Ile to kilogramów?", type: "input", ans: "2000", hint: "2 · 1000 kg = 2000 kg." },
+        { id: 10, prompt: "Co jest cięższe: <strong>1 kg czy 95 dag</strong>?", type: "choice", opts: ["1 kg", "95 dag"], ans: "1 kg", hint: "1 kg = 100 dag, a 100 dag > 95 dag." }
+      ],
+      "6_2": [
+        { id: 1, prompt: "Zamień na gramy: <strong>6 dag 5 g</strong> to łącznie ile $g$?", type: "input", ans: "65", hint: "60 g + 5 g = 65 g." },
+        { id: 2, prompt: "Zamień na dekagramy: <strong>4 kg 30 dag</strong> to ile $dag$?", type: "input", ans: "430", hint: "400 dag + 30 dag = 430 dag." },
+        { id: 3, prompt: "Zamień na kilogramy: <strong>3 t 500 kg</strong> to ile $kg$?", type: "input", ans: "3500", hint: "3000 kg + 500 kg = 3500 kg." },
+        { id: 4, prompt: "Ser waży 80 g. Ile to dekagramów ($dag$)?", type: "input", ans: "8", hint: "80 : 10 = 8 dag." },
+        { id: 5, prompt: "Zamień na dekagramy i gramy: <strong>48 g</strong> to ile pełnych dekagramów?", type: "input", ans: "4", hint: "48 g = 4 dag i 8 g." },
+        { id: 6, prompt: "Paczka karmy ma 700 dag. Ile to pełnych kilogramów?", type: "input", ans: "7", hint: "700 : 100 = 7 kg." },
+        { id: 7, prompt: "Wstaw odpowiedni znak: $1\\text{ kg } 5\\text{ dag} \\;\\square\\; 150\\text{ dag}$", type: "choice", opts: ["<", ">", "="], ans: "<", hint: "1 kg 5 dag = 105 dag, a 105 dag < 150 dag!" },
+        { id: 8, prompt: "Z torebki mąki o wadze 1 kg odsypano 25 dag. Ile dekagramów mąki zostało?", type: "input", ans: "75", hint: "100 dag - 25 dag = 75 dag." },
+        { id: 9, prompt: "Kupiono 3 kostki masła po 200 g każda. Ile to łącznie gramów?", type: "input", ans: "600", hint: "3 · 200 g = 600 g (czyli 60 dag)." },
+        { id: 10, prompt: "Samochód dostawczy waży 2 800 kg. Ile to pełnych ton?", type: "input", ans: "2", hint: "2800 kg to 2 t i 800 kg." }
+      ],
+      "6_3": [
+        { id: 1, prompt: "Ciężarówka z towarem waży 4 t 60 kg. Ile to dokładnie kilogramów?", type: "input", ans: "4060", hint: "4000 kg + 60 kg = 4060 kg (pamiętaj o zerze w setkach!)." },
+        { id: 2, prompt: "Kupiono 4 opakowania truskawek po 50 dag każde. Ile to łącznie kilogramów?", type: "input", ans: "2", hint: "4 · 50 dag = 200 dag = 2 kg." },
+        { id: 3, prompt: "Z 1 kg cukru odsypano 3 porcje po 20 dag. Ile dekagramów cukru zostało w torebce?", type: "input", ans: "40", hint: "3 · 20 dag = 60 dag. 100 dag - 60 dag = 40 dag." },
+        { id: 4, prompt: "Wstaw znak: $2\\text{ t } 80\\text{ kg} \\;\\square\\; 2800\\text{ kg}$", type: "choice", opts: ["<", ">", "="], ans: "<", hint: "2 t 80 kg = 2080 kg, a 2080 kg < 2800 kg!" },
+        { id: 5, prompt: "Tort waży 1 kg 400 g. Ile to łącznie gramów?", type: "input", ans: "1400", hint: "1000 g + 400 g = 1400 g." },
+        { id: 6, prompt: "Pięć jednakowych jabłek waży łącznie 1 kg. Ile gramów waży przeciętnie jedno jabłko?", type: "input", ans: "200", hint: "1000 g : 5 = 200 g (czyli 20 dag)." },
+        { id: 7, prompt: "W spiżarni było 35 kg ziemniaków. Zużyto 8 kg 50 dag. Ile dekagramów ziemniaków zostało?", type: "input", ans: "2650", hint: "3500 dag - 850 dag = 2650 dag (czyli 26 kg 50 dag)." },
+        { id: 8, prompt: "Zamień na gramy: <strong>2 kg 8 dag 3 g</strong> to łącznie ile $g$?", type: "input", ans: "2083", hint: "2000 g + 80 g + 3 g = 2083 g." },
+        { id: 9, prompt: "Słoik z miodem waży 850 g, a pusty słoik 250 g. Ile gramów waży sam miód?", type: "input", ans: "600", hint: "850 g - 250 g = 600 g (czyli 60 dag)." },
+        { id: 10, prompt: "Z worka mąki o wadze 50 kg odsypano 10 torebek po 2 kg. Ile kilogramów mąki pozostało w worku?", type: "input", ans: "30", hint: "10 · 2 kg = 20 kg. 50 kg - 20 kg = 30 kg." }
       ]
     };
 
     // Helper banner content depending on topic
     const helpers = {
       1: `
-        <span class="text-2xl">💡</span>
+        <span class="text-xl sm:text-2xl shrink-0">💡</span>
         <div>
-          <div class="font-extrabold text-pink-700">Wskazówka: System dziesiątkowy</div>
-          <p class="text-xs text-slate-600 mt-0.5">Każde miejsce w liczbie ma swoją nazwę: od prawej mamy <strong>jedności</strong> (1), potem <strong>dziesiątki</strong> (10), <strong>setki</strong> (100), <strong>tysiące</strong> (1000) i <strong>dziesiątki tysięcy</strong> (10 000). Jeśli jakiegoś rzędu brakuje — piszemy cyfrę 0!</p>
+          <div class="font-extrabold text-pink-700 text-xs sm:text-sm">Wskazówka: System dziesiątkowy</div>
+          <p class="text-[11px] sm:text-xs text-slate-600 mt-0.5">Każde miejsce w liczbie ma swoją nazwę: od prawej mamy <strong>jedności</strong> (1), potem <strong>dziesiątki</strong> (10), <strong>setki</strong> (100), <strong>tysiące</strong> (1000) i <strong>dziesiątki tysięcy</strong> (10 000). Jeśli jakiegoś rzędu brakuje — piszemy cyfrę 0!</p>
         </div>
       `,
       2: `
-        <span class="text-2xl">⚖️</span>
+        <span class="text-xl sm:text-2xl shrink-0">⚖️</span>
         <div>
-          <div class="font-extrabold text-purple-700">Wskazówka: Porównywanie liczb naturalnych</div>
-          <p class="text-xs text-slate-600 mt-0.5">Zawsze najpierw policz cyfry! Liczba z większą liczbą cyfr jest większa (np. $1000 > 999$). Jeśli liczba cyfr jest taka sama, porównuj cyfry od lewej do prawej strony!</p>
+          <div class="font-extrabold text-purple-700 text-xs sm:text-sm">Wskazówka: Porównywanie liczb naturalnych</div>
+          <p class="text-[11px] sm:text-xs text-slate-600 mt-0.5">Zawsze najpierw policz cyfry! Liczba z większą liczbą cyfr jest większa (np. $1000 > 999$). Jeśli liczba cyfr jest taka sama, porównuj cyfry od lewej do prawej strony!</p>
         </div>
       `,
       3: `
-        <span class="text-2xl">🎀</span>
+        <span class="text-xl sm:text-2xl shrink-0">🎀</span>
         <div>
-          <div class="font-extrabold text-rose-700">Magiczna zasada dzielenia z zerami (punkt 3b!):</div>
-          <p class="text-xs text-slate-600 mt-0.5">Gdy dzielisz liczby z zerami: <strong>skreślasz dokładnie tyle samo zer w dzielniku, ile w dzielnej!</strong><br>
+          <div class="font-extrabold text-rose-700 text-xs sm:text-sm">Magiczna zasada dzielenia z zerami:</div>
+          <p class="text-[11px] sm:text-xs text-slate-600 mt-0.5">Gdy dzielisz liczby z zerami: <strong>skreślasz dokładnie tyle samo zer w dzielniku, ile w dzielnej!</strong><br>
           Np. $160 : 40 = 16 : 4 = \\mathbf{4}$. Albo $4800 : 800 = 48 : 8 = \\mathbf{6}$. A w $5600 : 70 = 560 : 7 = \\mathbf{80}$.</p>
         </div>
       `,
       4: `
-        <span class="text-2xl">💰</span>
+        <span class="text-xl sm:text-2xl shrink-0">💰</span>
         <div>
-          <div class="font-extrabold text-amber-700">Wskazówka: Jednostki monetarne — złote i grosze</div>
-          <p class="text-xs text-slate-600 mt-0.5">Najważniejsza zasada: <strong>$1\\text{ zł} = 100\\text{ gr}$</strong>! Zamieniając złote na grosze, dopisujesz dwa zera (np. $4\\text{ zł} = 400\\text{ gr}$). Uważaj przy liczbach jednocyfrowych: $5\\text{ zł } 4\\text{ gr} = 504\\text{ gr}$, a nie $54\\text{ gr}$!</p>
+          <div class="font-extrabold text-amber-700 text-xs sm:text-sm">Wskazówka: Jednostki monetarne — złote i grosze</div>
+          <p class="text-[11px] sm:text-xs text-slate-600 mt-0.5">Najważniejsza zasada: <strong>$1\\text{ zł} = 100\\text{ gr}$</strong>! Zamieniając złote na grosze, dopisujesz dwa zera (np. $4\\text{ zł} = 400\\text{ gr}$). Uważaj: $5\\text{ zł } 4\\text{ gr} = 504\\text{ gr}$!</p>
         </div>
       `,
       5: `
-        <span class="text-2xl">📏</span>
+        <span class="text-xl sm:text-2xl shrink-0">📏</span>
         <div>
-          <div class="font-extrabold text-sky-700">Wskazówka: Jednostki długości</div>
-          <p class="text-xs text-slate-600 mt-0.5">Zapamiętaj magiczną drabinkę miar:<br>
-          • $1\\text{ cm} = 10\\text{ mm}$<br>
-          • $1\\text{ dm} = 10\\text{ cm} = 100\\text{ mm}$<br>
-          • $1\\text{ m} = 10\\text{ dm} = 100\\text{ cm}$<br>
-          • $1\\text{ km} = 1000\\text{ m}$</p>
+          <div class="font-extrabold text-sky-700 text-xs sm:text-sm">Wskazówka: Jednostki długości</div>
+          <p class="text-[11px] sm:text-xs text-slate-600 mt-0.5">Drabinka miar długości:<br>
+          • $1\\text{ cm} = 10\\text{ mm}$ &nbsp;|&nbsp; • $1\\text{ dm} = 10\\text{ cm}$ &nbsp;|&nbsp; • $1\\text{ m} = 100\\text{ cm}$ &nbsp;|&nbsp; • $1\\text{ km} = 1000\\text{ m}$</p>
+        </div>
+      `,
+      6: `
+        <span class="text-xl sm:text-2xl shrink-0">⚖️</span>
+        <div>
+          <div class="font-extrabold text-emerald-700 text-xs sm:text-sm">Wskazówka: Jednostki masy (wagi)</div>
+          <p class="text-[11px] sm:text-xs text-slate-600 mt-0.5">Zapamiętaj magiczną wagę kuchenną i przemysłową:<br>
+          • <strong>$1\\text{ dag} = 10\\text{ g}$</strong> (1 dekagram to 10 gramów)<br>
+          • <strong>$1\\text{ kg} = 100\\text{ dag} = 1000\\text{ g}$</strong> (1 kilogram to 100 dekagramów)<br>
+          • <strong>$1\\text{ t} = 1000\\text{ kg}$</strong> (1 tona to 1000 kilogramów)</p>
         </div>
       `
     };
@@ -562,15 +638,22 @@
     function selectTopic(topicNum) {
       currentTopic = topicNum;
       
-      // Update topic buttons UI (5 topics)
-      for (let i = 1; i <= 5; i++) {
+      // Update topic buttons UI (6 topics)
+      for (let i = 1; i <= 6; i++) {
         const btn = document.getElementById(`btn-topic-${i}`);
         if (!btn) continue;
         if (i === topicNum) {
-          btn.className = "topic-btn flex-1 min-w-[150px] py-2.5 px-3 rounded-2xl font-extrabold text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5 bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-md";
+          btn.className = "topic-btn shrink-0 py-2 sm:py-2.5 px-3 rounded-xl sm:rounded-2xl font-extrabold text-xs transition-all flex items-center gap-1.5 bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-sm min-h-[42px]";
+          // Scroll active button into view on mobile
+          btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
         } else {
-          btn.className = "topic-btn flex-1 min-w-[150px] py-2.5 px-3 rounded-2xl font-bold text-xs sm:text-sm text-slate-600 hover:bg-pink-50 transition-all flex items-center justify-center gap-1.5";
+          btn.className = "topic-btn shrink-0 py-2 sm:py-2.5 px-3 rounded-xl sm:rounded-2xl font-bold text-xs text-slate-600 hover:bg-pink-50 transition-all flex items-center gap-1.5 min-h-[42px]";
         }
+      }
+
+      const indicator = document.getElementById('topic-indicator-badge');
+      if (indicator) {
+        indicator.textContent = `Temat ${topicNum} z 6`;
       }
 
       document.getElementById('topic-helper').innerHTML = helpers[topicNum];
@@ -584,9 +667,9 @@
       for (let i = 1; i <= 3; i++) {
         const btn = document.getElementById(`lvl-btn-${i}`);
         if (i === lvlNum) {
-          btn.className = "lvl-btn px-3 py-1.5 rounded-xl text-xs font-extrabold bg-pink-500 text-white shadow transition";
+          btn.className = "lvl-btn shrink-0 px-2.5 sm:px-3 py-1.5 rounded-xl text-[11px] sm:text-xs font-black bg-pink-500 text-white shadow transition min-h-[38px]";
         } else {
-          btn.className = "lvl-btn px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-pink-50 transition";
+          btn.className = "lvl-btn shrink-0 px-2.5 sm:px-3 py-1.5 rounded-xl text-[11px] sm:text-xs font-bold text-slate-600 hover:bg-pink-50 transition min-h-[38px]";
         }
       }
 
@@ -606,13 +689,13 @@
         let inputControl = '';
         if (task.type === 'choice') {
           inputControl = `
-            <div class="flex flex-wrap gap-2 mt-3">
+            <div class="flex flex-wrap gap-1.5 sm:gap-2 mt-2.5 sm:mt-3">
               ${task.opts.map(opt => `
                 <button onclick="handleChoiceClick('${uniqueKey}', '${opt}', '${task.ans}', this, '${task.prompt.replace(/'/g, "\\'")}')" 
-                  class="choice-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold border transition-all ${
+                  class="choice-btn flex-1 sm:flex-initial px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold border transition-all min-h-[42px] flex items-center justify-center ${
                     existingAns === opt
                       ? (isSolved ? 'bg-emerald-500 text-white border-emerald-600 shadow' : 'bg-rose-100 text-rose-700 border-rose-300')
-                      : 'bg-slate-50 text-slate-700 hover:bg-pink-50 border-slate-200'
+                      : 'bg-slate-50 text-slate-700 hover:bg-pink-50 border-slate-200 active:scale-95'
                   }">
                   ${opt}
                 </button>
@@ -621,27 +704,28 @@
           `;
         } else {
           inputControl = `
-            <div class="flex items-center gap-2 mt-3">
+            <div class="flex items-center gap-2 mt-2.5 sm:mt-3">
               <input type="text" id="inp-${uniqueKey}" 
                 value="${existingAns || (isSolved ? task.ans : '')}" 
                 oninput="handleInputChange('${uniqueKey}', '${task.ans}', this, '${task.prompt.replace(/'/g, "\\'")}')" 
                 placeholder="Wpisz wynik..." 
-                class="w-full sm:w-48 text-center font-extrabold text-sm p-2 rounded-xl border ${
+                inputmode="numeric"
+                class="w-full sm:w-48 text-center font-extrabold text-sm sm:text-base p-2 sm:p-2.5 rounded-xl border min-h-[42px] ${
                   isSolved ? 'bg-emerald-50 border-emerald-400 text-emerald-800' : 'bg-rose-50/40 border-pink-200 text-rose-800 focus:outline-none focus:ring-2 focus:ring-pink-300'
                 }">
-              ${isSolved ? '<span class="text-emerald-500 text-lg font-black">✓</span>' : ''}
+              ${isSolved ? '<span class="text-emerald-500 text-lg sm:text-xl font-black">✓</span>' : ''}
             </div>
           `;
         }
 
         return `
-          <div id="card-${uniqueKey}" class="cute-card bg-white p-4 sm:p-5 rounded-3xl border ${isSolved ? 'border-emerald-300 bg-emerald-50/20' : 'border-pink-200/80'} shadow-sm flex flex-col justify-between">
+          <div id="card-${uniqueKey}" class="cute-card bg-white p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border ${isSolved ? 'border-emerald-300 bg-emerald-50/20' : 'border-pink-200/80'} shadow-sm flex flex-col justify-between">
             <div>
-              <div class="flex items-center justify-between mb-2">
-                <span class="inline-flex items-center justify-center w-7 h-7 rounded-xl ${isSolved ? 'bg-emerald-500 text-white' : 'bg-pink-100 text-pink-700'} font-black text-xs">
+              <div class="flex items-center justify-between mb-1.5 sm:mb-2">
+                <span class="inline-flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-xl ${isSolved ? 'bg-emerald-500 text-white' : 'bg-pink-100 text-pink-700'} font-black text-xs">
                   ${idx + 1}
                 </span>
-                <span class="text-[11px] font-bold text-slate-400 flex items-center gap-1">
+                <span class="text-[10px] sm:text-[11px] font-bold text-slate-400 flex items-center gap-1">
                   <span>${isSolved ? '🌸 Rozwiązane!' : '⭐ 1 kryształek'}</span>
                 </span>
               </div>
@@ -654,11 +738,11 @@
             </div>
 
             <!-- Hint toggle -->
-            <div class="mt-3 pt-2 border-t border-pink-100/60 flex items-center justify-between">
-              <button onclick="toggleHint('hint-${uniqueKey}')" class="text-[11px] font-bold text-pink-500 hover:text-pink-700 transition flex items-center gap-1">
+            <div class="mt-2.5 sm:mt-3 pt-2 border-t border-pink-100/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1">
+              <button onclick="toggleHint('hint-${uniqueKey}')" class="text-[10px] sm:text-[11px] font-bold text-pink-500 hover:text-pink-700 transition flex items-center gap-1 py-1">
                 <span>💡 Wskazówka</span>
               </button>
-              <div id="hint-${uniqueKey}" class="hidden text-[11px] text-slate-600 bg-pink-50/80 p-2 rounded-xl border border-pink-200 mt-1 w-full">
+              <div id="hint-${uniqueKey}" class="hidden text-[10px] sm:text-[11px] text-slate-600 bg-pink-50/80 p-2 rounded-xl border border-pink-200 mt-1 w-full">
                 ${task.hint}
               </div>
             </div>
@@ -678,64 +762,6 @@
           throwOnError: false
         });
       }
-    }
-
-    function handleChoiceClick(key, selected, correct, btnElem) {
-      if (selected.trim().toLowerCase() === correct.trim().toLowerCase()) {
-        solvedKeys.add(key);
-        playBeep(true);
-        confetti({
-          particleCount: 30,
-          spread: 45,
-          origin: { y: 0.7 }
-        });
-        renderCards();
-      } else {
-        playBeep(false);
-        btnElem.classList.add('bg-rose-100', 'border-rose-400', 'text-rose-700', 'animate-shake');
-        setTimeout(() => {
-          btnElem.classList.remove('bg-rose-100', 'border-rose-400', 'text-rose-700', 'animate-shake');
-        }, 500);
-      }
-    }
-
-    function handleInputChange(key, correct, inpElem) {
-      const val = inpElem.value.trim().toLowerCase();
-      const expected = correct.trim().toLowerCase();
-
-      if (val === expected) {
-        solvedKeys.add(key);
-        playBeep(true);
-        confetti({
-          particleCount: 35,
-          spread: 50,
-          origin: { y: 0.7 }
-        });
-        renderCards();
-      }
-    }
-
-    function toggleHint(hintId) {
-      const hint = document.getElementById(hintId);
-      if (hint) {
-        hint.classList.toggle('hidden');
-      }
-    }
-
-    function updateProgressBar() {
-      // Sub level progress (0..10)
-      let currentLevelSolved = 0;
-      for (let i = 1; i <= 10; i++) {
-        if (solvedKeys.has(`${currentTopic}_${currentLevel}_${i}`)) {
-          currentLevelSolved++;
-        }
-      }
-      const pct = (currentLevelSolved / 10) * 100;
-      document.getElementById('sub-progress-bar').style.width = `${pct}%`;
-      document.getElementById('sub-progress-text').textContent = `${currentLevelSolved} / 10`;
-
-      // Overall score counter (now out of 150 tasks)
-      document.getElementById('score-counter').textContent = `${solvedKeys.size} / 150`;
     }
 
     function recordStudentAnswer(key, givenAns, expectedAns, isCorrect, rawPrompt) {
@@ -766,9 +792,9 @@
       } else {
         solvedKeys.delete(key);
         playBeep(false);
-        btnElem.classList.add('bg-rose-100', 'border-rose-400', 'text-rose-700', 'animate-shake');
+        btnElem.classList.add('bg-rose-100', 'border-rose-400', 'text-rose-700');
         setTimeout(() => {
-          btnElem.classList.remove('bg-rose-100', 'border-rose-400', 'text-rose-700', 'animate-shake');
+          btnElem.classList.remove('bg-rose-100', 'border-rose-400', 'text-rose-700');
         }, 500);
       }
       renderCards();
@@ -815,9 +841,9 @@
     function updateFloatingBadge() {
       const count = Object.keys(studentResponses).length;
       const badge = document.getElementById('floating-badge');
-      if (badge) {
-        badge.textContent = `${count} odp.`;
-      }
+      const badgeMobile = document.getElementById('floating-badge-mobile');
+      if (badge) badge.textContent = `${count} odp.`;
+      if (badgeMobile) badgeMobile.textContent = count;
     }
 
     function updateProgressBar() {
@@ -832,8 +858,11 @@
       document.getElementById('sub-progress-bar').style.width = `${pct}%`;
       document.getElementById('sub-progress-text').textContent = `${currentLevelSolved} / 10`;
 
-      // Overall score counter (now out of 150 tasks)
-      document.getElementById('score-counter').textContent = `${solvedKeys.size} / 150`;
+      // Overall score counter (now out of 180 tasks: 6 topics x 3 levels x 10 tasks)
+      const totalScoreText = `${solvedKeys.size} / 180`;
+      document.getElementById('score-counter').textContent = totalScoreText;
+      const mobScore = document.getElementById('mobile-bottom-score');
+      if (mobScore) mobScore.textContent = totalScoreText;
     }
 
     // GENEROWANIE I WYSYŁKA RAPORTU NA E-MAIL
@@ -847,8 +876,8 @@
       let text = `RAPORT WYNIKÓW: MAGIA MATEMATYKI (KLASA 4)\n`;
       text += `Data: ${dateStr}\n`;
       text += `Uczennica: ${studentName}\n`;
-      text += `Wynik punktowy: ${totalCorrect} / 150 kryształków\n`;
-      text += `Liczba rozwiązanych zadań: ${totalAnswered} / 150\n`;
+      text += `Wynik punktowy: ${totalCorrect} / 180 kryształków\n`;
+      text += `Liczba rozwiązanych zadań: ${totalAnswered} / 180\n`;
       text += `Komentarz uczennicy: ${studentComment}\n\n`;
       text += `--------------------------------------------------------\n`;
       text += `SZCZEGÓŁOWE ODPOWIEDZI:\n`;
@@ -904,7 +933,7 @@
     function sendViaMailto() {
       const recipient = "violettamaruk@gmail.com";
       const studentName = document.getElementById('student-name')?.value.trim() || 'Uczennica';
-      const subject = encodeURIComponent(`Wyniki z matematyki (Klasa 4) - ${studentName} [${solvedKeys.size}/150 💎]`);
+      const subject = encodeURIComponent(`Wyniki z matematyki (Klasa 4) - ${studentName} [${solvedKeys.size}/180 💎]`);
       const body = encodeURIComponent(generateReportText());
       window.location.href = `mailto:${recipient}?subject=${subject}&body=${body}`;
     }
