@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌸 Magiczna Kraina Matematyki — Klasa 4</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- KaTeX for formula formatting -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Google Fonts: Comfortaa & Nunito -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(135deg, #fff0f5 0%, #fdf2f8 35%, #f5f3ff 70%, #ecfeff 100%);
+    }
+    h1, h2, h3, .magic-heading {
+      font-family: 'Comfortaa', cursive;
+    }
+    .cute-card {
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .cute-card:hover {
+      transform: translateY(-2px);
+    }
+    .glow-pink {
+      box-shadow: 0 0 25px -5px rgba(244, 63, 94, 0.25);
+    }
+    @media print {
+      .no-print { display: none !important; }
+      body { background: white !important; }
+      .cute-card { border: 1px solid #cbd5e1 !important; box-shadow: none !important; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-800 antialiased flex flex-col selection:bg-pink-300 selection:text-pink-900">
+
+  <!-- Top Hero Bar -->
+  <header class="bg-gradient-to-r from-pink-400 via-rose-400 to-purple-500 text-white shadow-lg no-print py-5 px-4 sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="text-center md:text-left">
+        <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-black tracking-wide mb-1 text-pink-50 border border-white/30">
+          <span>🦄 Klasa 4</span>
+          <span>•</span>
+          <span>Systemy zapisywania liczb</span>
+          <span>•</span>
+          <span>Zabawa i nauka! ✨</span>
+        </div>
+        <h1 class="text-xl sm:text-2xl font-black tracking-wide drop-shadow-sm flex items-center justify-center md:justify-start gap-2">
+          <span>🌸 Magiczna Kraina Matematyki</span>
+        </h1>
+      </div>
+
+      <!-- Gamification Counters -->
+      <div class="flex items-center gap-3">
+        <div class="bg-white/20 backdrop-blur-md px-3.5 py-1.5 rounded-2xl border border-white/30 flex items-center gap-2 shadow-inner">
+          <span class="text-xl animate-bounce">💎</span>
+          <div>
+            <div class="text-[10px] uppercase font-bold text-pink-100">Kryształki</div>
+            <div id="score-counter" class="text-lg font-black text-white leading-none">0 / 150</div>
+          </div>
+        </div>
+
+        <button onclick="openSendReportModal()" class="px-3.5 py-2 bg-white text-rose-600 hover:bg-rose-50 active:scale-95 font-extrabold rounded-2xl shadow-md transition text-xs flex items-center gap-1.5 border border-pink-200">
+          <span>💌</span>
+          <span>Wyślij wyniki</span>
+        </button>
+
+        <button onclick="playCelebration()" class="px-3.5 py-2 bg-amber-300 hover:bg-amber-200 active:scale-95 text-amber-950 font-black rounded-2xl shadow transition text-xs flex items-center gap-1.5 border border-amber-400">
+          <span>🎆</span>
+          <span>Iskierki</span>
+        </button>
+
+        <button onclick="window.print()" class="px-3 py-2 bg-white/10 hover:bg-white/20 active:scale-95 text-white font-bold rounded-2xl border border-white/25 transition text-xs">
+          🖨️ PDF
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Topic Selector -->
+  <section class="max-w-6xl mx-auto px-4 mt-6 w-full no-print">
+    <div class="bg-white/80 backdrop-blur-lg p-2.5 sm:p-3 rounded-3xl border border-pink-200/70 shadow-sm flex flex-wrap gap-2">
+      <button onclick="selectTopic(1)" id="btn-topic-1" class="topic-btn flex-1 min-w-[150px] py-2.5 px-3 rounded-2xl font-extrabold text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5 bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-md">
+        <span>🔢</span>
+        <span>1. System dziesiątkowy</span>
+      </button>
+      <button onclick="selectTopic(2)" id="btn-topic-2" class="topic-btn flex-1 min-w-[150px] py-2.5 px-3 rounded-2xl font-bold text-xs sm:text-sm text-slate-600 hover:bg-pink-50 transition-all flex items-center justify-center gap-1.5">
+        <span>⚖️</span>
+        <span>2. Porównywanie liczb</span>
+      </button>
+      <button onclick="selectTopic(3)" id="btn-topic-3" class="topic-btn flex-1 min-w-[150px] py-2.5 px-3 rounded-2xl font-bold text-xs sm:text-sm text-slate-600 hover:bg-pink-50 transition-all flex items-center justify-center gap-1.5">
+        <span>🎯</span>
+        <span>3. Rachunki (z zerami!)</span>
+      </button>
+      <button onclick="selectTopic(4)" id="btn-topic-4" class="topic-btn flex-1 min-w-[150px] py-2.5 px-3 rounded-2xl font-bold text-xs sm:text-sm text-slate-600 hover:bg-pink-50 transition-all flex items-center justify-center gap-1.5">
+        <span>💰</span>
+        <span>4. Złote i grosze</span>
+      </button>
+      <button onclick="selectTopic(5)" id="btn-topic-5" class="topic-btn flex-1 min-w-[150px] py-2.5 px-3 rounded-2xl font-bold text-xs sm:text-sm text-slate-600 hover:bg-pink-50 transition-all flex items-center justify-center gap-1.5">
+        <span>📏</span>
+        <span>5. Jednostki długości</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Difficulty Levels Pills & Progress -->
+  <section class="max-w-6xl mx-auto px-4 mt-4 w-full no-print">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white/70 p-3 rounded-2xl border border-pink-100">
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-black text-rose-500 uppercase tracking-wider mr-1">Poziom:</span>
+        <button onclick="selectLevel(1)" id="lvl-btn-1" class="lvl-btn px-3 py-1.5 rounded-xl text-xs font-extrabold bg-pink-100 text-pink-700 hover:bg-pink-200 transition">
+          ⭐ Poziom 1 (Łatwy)
+        </button>
+        <button onclick="selectLevel(2)" id="lvl-btn-2" class="lvl-btn px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-pink-50 transition">
+          🔮 Poziom 2 (Średni)
+        </button>
+        <button onclick="selectLevel(3)" id="lvl-btn-3" class="lvl-btn px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-pink-50 transition">
+          👑 Poziom 3 (Mistrzyni)
+        </button>
+      </div>
+
+      <!-- Quick Progress Bar -->
+      <div class="flex items-center gap-2 min-w-[180px]">
+        <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
+          <div id="sub-progress-bar" class="bg-gradient-to-r from-pink-500 to-rose-400 h-full w-0 transition-all duration-300"></div>
+        </div>
+        <span id="sub-progress-text" class="text-xs font-bold text-pink-600 min-w-max">0 / 10</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Helpful Visual Reminder Banner -->
+  <section class="max-w-6xl mx-auto px-4 mt-4 w-full">
+    <div id="topic-helper" class="bg-white border-2 border-pink-200 rounded-2xl p-4 shadow-sm text-xs sm:text-sm text-slate-700 flex items-start gap-3">
+      <!-- Injected by JS -->
+    </div>
+  </section>
+
+  <!-- Tasks Grid -->
+  <main class="max-w-6xl mx-auto px-4 py-6 flex-1 w-full">
+    <div id="cards-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- 10 Tasks rendered by JS -->
+    </div>
+
+    <!-- Motivational Box -->
+    <div class="mt-8 text-center p-6 bg-gradient-to-r from-pink-100 via-purple-50 to-rose-100 rounded-3xl border border-pink-200 shadow-sm">
+      <div class="text-3xl mb-1">🍭 🦄 🌟</div>
+      <h3 class="text-base sm:text-lg font-black text-rose-800 magic-heading">Świetnie Ci idzie, jesteś super!</h3>
+      <p class="text-xs sm:text-sm text-slate-600 mt-1 max-w-lg mx-auto">
+        Rozwiązuj po kolei, wpisuj odpowiedzi w białe okienka lub wybieraj właściwe przyciski. Gdy masz rację — usłyszysz magiczny dzwoneczek i pole zaświeci się na zielono!
+      </p>
+      <div class="mt-4">
+        <button onclick="openSendReportModal()" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-pink-500 via-rose-500 to-purple-500 text-white font-black text-sm rounded-2xl shadow-lg hover:shadow-xl active:scale-95 transition-all border border-white/40">
+          <span>💌 Zakończ trening i wyślij raport do Pani Violetty</span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Sticky Bottom Summary Floating Banner -->
+  <div class="fixed bottom-4 right-4 z-40 no-print">
+    <button onclick="openSendReportModal()" class="px-4 py-3 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-black text-xs sm:text-sm rounded-2xl shadow-xl flex items-center gap-2 border-2 border-white/80 transition-all">
+      <span>✉️</span>
+      <span class="hidden sm:inline">Wyślij na:</span>
+      <span class="underline">violettamaruk@gmail.com</span>
+      <span id="floating-badge" class="ml-1 bg-white text-rose-600 text-xs px-2 py-0.5 rounded-full font-black">0 odp.</span>
+    </button>
+  </div>
+
+  <!-- Modal do wysyłki wyników na e-mail -->
+  <div id="email-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm no-print">
+    <div class="bg-white w-full max-w-lg rounded-3xl p-6 shadow-2xl border-2 border-pink-300 relative max-h-[90vh] flex flex-col justify-between">
+      <button onclick="closeSendReportModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-xl font-bold w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">✕</button>
+
+      <div>
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-2xl">💌</span>
+          <h2 class="text-lg font-black text-rose-700 magic-heading">Raport wyników z matematyki</h2>
+        </div>
+        <p class="text-xs text-slate-500 mb-4">
+          Wszystkie udzielone odpowiedzi zostaną sformatowane i wysłane bezpośrednio na adres: <strong class="text-rose-600">violettamaruk@gmail.com</strong>
+        </p>
+
+        <!-- Dane uczennicy -->
+        <div class="space-y-3 mb-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Imię i nazwisko uczennicy:</label>
+            <input type="text" id="student-name" placeholder="np. Marysia Kowalska (klasa 4A)" class="w-full text-xs sm:text-sm p-2.5 rounded-xl border border-pink-200 bg-pink-50/40 focus:outline-none focus:ring-2 focus:ring-pink-400 font-semibold text-slate-800">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Krótki komentarz / nastrój (opcjonalnie):</label>
+            <input type="text" id="student-comment" placeholder="np. Zadania z zerami były super proste! 🌸" class="w-full text-xs sm:text-sm p-2.5 rounded-xl border border-pink-200 bg-pink-50/40 focus:outline-none focus:ring-2 focus:ring-pink-400 font-semibold text-slate-800">
+          </div>
+        </div>
+
+        <!-- Podsumowanie statystyk -->
+        <div class="p-3 bg-gradient-to-r from-pink-50 to-purple-50 rounded-2xl border border-pink-100 flex items-center justify-around text-center text-xs mb-4">
+          <div>
+            <div class="text-slate-400 font-bold uppercase text-[10px]">Poprawne (💎)</div>
+            <div id="modal-correct-count" class="text-base font-black text-emerald-600">0</div>
+          </div>
+          <div class="border-l border-pink-200 h-8"></div>
+          <div>
+            <div class="text-slate-400 font-bold uppercase text-[10px]">Wypełnione zadania</div>
+            <div id="modal-answered-count" class="text-base font-black text-rose-600">0</div>
+          </div>
+          <div class="border-l border-pink-200 h-8"></div>
+          <div>
+            <div class="text-slate-400 font-bold uppercase text-[10px]">Łącznie zadań</div>
+            <div class="text-base font-black text-slate-700">150</div>
+          </div>
+        </div>
+
+        <!-- Podgląd tekstu raportu -->
+        <div>
+          <label class="block text-[11px] font-bold text-slate-500 mb-1">Podgląd treści raportu:</label>
+          <textarea id="report-preview-box" readonly class="w-full h-28 text-[11px] font-mono p-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 resize-none"></textarea>
+        </div>
+      </div>
+
+      <!-- Akcje -->
+      <div class="mt-4 pt-3 border-t border-slate-100 flex flex-col sm:flex-row gap-2">
+        <button onclick="sendViaMailto()" class="flex-1 py-3 px-4 bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 active:scale-95 text-white font-extrabold text-xs sm:text-sm rounded-xl shadow-md transition flex items-center justify-center gap-1.5">
+          <span>🚀 Otwórz pocztę i wyślij</span>
+        </button>
+        <button onclick="copyReportToClipboard()" id="copy-report-btn" class="py-3 px-4 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 font-bold text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-1">
+          <span>📋 Kopiuj raport</span>
+        </button>
+      </div>
+      <div id="copy-status" class="hidden text-center text-xs text-emerald-600 font-bold mt-2">
+        ✓ Skopiowano do schowka! Możesz wkleić do wiadomości.
+      </div>
+    </div>
+  </div>
+
+  <footer class="bg-white/80 border-t border-pink-200 py-4 text-center text-xs text-pink-600 no-print font-bold">
+    🌸 Klasa 4 • Matematyka z uśmiechem • 5 tematów po 3 poziomy (150 zadań) 💖
+  </footer>
+
+  <script>
+    // Web Audio synthesizer for cute sound effects without external URLs
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playBeep(success = true) {
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      if (success) {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+        osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.15); // A5
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.2);
+      } else {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(160, audioCtx.currentTime + 0.2);
+        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.2);
+      }
+    }
+
+    function playCelebration() {
+      playBeep(true);
+      confetti({
+        particleCount: 70,
+        spread: 60,
+        origin: { y: 0.6 },
+        colors: ['#f43f5e', '#ec4899', '#c084fc', '#facc15', '#38bdf8']
+      });
+    }
+
+    // STATE
+    let currentTopic = 1;
+    let currentLevel = 1;
+    let solvedKeys = new Set();
+    // System zbierania i utrwalania wszystkich odpowiedzi uczennicy
+    let studentResponses = {}; // format: { [uniqueKey]: { prompt, answer, expected, correct, timestamp, topicName, levelName } }
+
+    const TOPIC_NAMES = {
+      1: "1. System dziesiątkowy",
+      2: "2. Porównywanie liczb",
+      3: "3. Rachunki pamięciowe (z zerami)",
+      4: "4. Złote i grosze",
+      5: "5. Jednostki długości"
+    };
+
+    const LEVEL_NAMES = {
+      1: "Poziom 1 (Łatwy)",
+      2: "Poziom 2 (Średni)",
+      3: "Poziom 3 (Mistrzyni)"
+    };
+
+    // 90 TASKS DATABASE (3 topics x 3 levels x 10 tasks)
+    const database = {
+      // -------------------------------------------------------------------------
+      // TEMAT 1: System dziesiątkowy (52 str.)
+      // -------------------------------------------------------------------------
+      "1_1": [
+        { id: 1, prompt: "W liczbie <strong>458</strong> cyfrą jedności jest:", type: "choice", opts: ["4", "5", "8"], ans: "8", hint: "Cyfra jedności to ostatnia cyfra z prawej strony!" },
+        { id: 2, prompt: "W liczbie <strong>723</strong> cyfrą dziesiątek jest:", type: "choice", opts: ["7", "2", "3"], ans: "2", hint: "Cyfra dziesiątek to druga cyfra od prawej strony." },
+        { id: 3, prompt: "W liczbie <strong>916</strong> cyfrą setek jest:", type: "choice", opts: ["9", "1", "6"], ans: "9", hint: "Cyfra setek to trzecia cyfra od prawej." },
+        { id: 4, prompt: "Liczba składająca się z <strong>5 setek, 3 dziesiątek i 4 jedności</strong> to:", type: "choice", opts: ["534", "354", "543"], ans: "534", hint: "500 + 30 + 4 = 534." },
+        { id: 5, prompt: "Wpisz liczbę, która ma <strong>3 setki i 8 jedności</strong> (dziesiątek ma 0):", type: "input", ans: "308", hint: "Pamiętaj o zerze w rzędzie dziesiątek: 308." },
+        { id: 6, prompt: "Liczba o 1 większa od <strong>399</strong> to:", type: "input", ans: "400", hint: "399 + 1 = 400." },
+        { id: 7, prompt: "Liczba o 1 mniejsza od <strong>600</strong> to:", type: "input", ans: "599", hint: "600 - 1 = 599." },
+        { id: 8, prompt: "Ile dziesiątek mieści się w całej liczbie <strong>70</strong>?", type: "input", ans: "7", hint: "70 to 7 dziesiątek." },
+        { id: 9, prompt: "Zapisz cyframi liczbę: <strong>sześćset dwadzieścia pięć</strong>:", type: "input", ans: "625", hint: "6 setek, 2 dziesiątki, 5 jedności = 625." },
+        { id: 10, prompt: "W liczbie <strong>804</strong> cyfrą dziesiątek jest:", type: "choice", opts: ["8", "0", "4"], ans: "0", hint: "Na drugim miejscu od końca stoi cyfra 0." }
+      ],
+      "1_2": [
+        { id: 1, prompt: "W liczbie <strong>4 729</strong> cyfrą tysięcy jest:", type: "choice", opts: ["4", "7", "2", "9"], ans: "4", hint: "Rząd tysięcy to czwarta cyfra od prawej." },
+        { id: 2, prompt: "Rozwinięcie liczby: $3000 + 400 + 50 + 6 =$ ", type: "input", ans: "3456", hint: "Połącz rzędy: 3456." },
+        { id: 3, prompt: "Zapisz cyframi liczbę: <strong>dwa tysiące pięćdziesiąt trzy</strong>:", type: "input", ans: "2053", hint: "Uwaga na 0 w rzędzie setek: 2 tysiące, 0 setek, 5 dziesiątek, 3 jedności." },
+        { id: 4, prompt: "W liczbie <strong>15 842</strong> cyfrą dziesiątek tysięcy jest:", type: "choice", opts: ["1", "5", "8"], ans: "1", hint: "1 dziesiątka tysięcy to 10 000." },
+        { id: 5, prompt: "Rozwinięcie: $5000 + 80 + 2 =$ ", type: "input", ans: "5082", hint: "Nie ma rzędu setek, wpisz 0: 5082." },
+        { id: 6, prompt: "Liczba o 10 większa od <strong>1 490</strong> to:", type: "input", ans: "1500", hint: "1490 + 10 = 1500." },
+        { id: 7, prompt: "Liczba o 100 mniejsza od <strong>3 200</strong> to:", type: "input", ans: "3100", hint: "3200 - 100 = 3100." },
+        { id: 8, prompt: "Ile setek mieści się w liczbie <strong>4 000</strong>?", type: "input", ans: "40", hint: "4000 : 100 = 40 setek." },
+        { id: 9, prompt: "Zapisz cyframi liczbę: <strong>osiem tysięcy siedemset</strong>:", type: "input", ans: "8700", hint: "8 tysięcy i 7 setek = 8700." },
+        { id: 10, prompt: "W liczbie <strong>9 035</strong> ile jest pełnych jedności w rzędzie jedności?", type: "input", ans: "5", hint: "Ostatnia cyfra to 5." }
+      ],
+      "1_3": [
+        { id: 1, prompt: "Jaka jest największa liczba 4-cyfrowa utworzona z cyfr <strong>3, 8, 1, 9</strong> (bez powtórzeń)?", type: "input", ans: "9831", hint: "Ustaw cyfry od największej do najmniejszej: 9, 8, 3, 1." },
+        { id: 2, prompt: "Jaka jest najmniejsza liczba 4-cyfrowa z cyfr <strong>5, 0, 7, 2</strong> (cyfra 0 nie może być pierwsza)?", type: "input", ans: "2057", hint: "Pierwsza musi być najmniejsza niezerowa (2), potem 0, 5, 7." },
+        { id: 3, prompt: "Rozwinięcie dziesiętne: $70\\,000 + 4\\,000 + 300 + 8 = $", type: "input", ans: "74308", hint: "Dziesiątek jest 0, czyli 74308." },
+        { id: 4, prompt: "Liczba o 1 mniejsza od <strong>10 000</strong> to:", type: "input", ans: "9999", hint: "10 000 - 1 = 9 999." },
+        { id: 5, prompt: "Liczba o 1 większa od <strong>19 999</strong> to:", type: "input", ans: "20000", hint: "19 999 + 1 = 20 000." },
+        { id: 6, prompt: "Zapisz cyframi: <strong>sto pięć tysięcy czterdzieści</strong>:", type: "input", ans: "105040", hint: "105 tysięcy i 40 = 105 040." },
+        { id: 7, prompt: "W liczbie <strong>248 519</strong> cyfra <strong>4</strong> oznacza:", type: "choice", opts: ["4 tysiące", "40 tysięcy", "400 tysięcy"], ans: "40 tysięcy", hint: "Stoi w rzędzie dziesiątek tysięcy!" },
+        { id: 8, prompt: "Ile pełnych tysięcy mieści się w liczbie <strong>35 000</strong>?", type: "input", ans: "35", hint: "35 000 : 1000 = 35." },
+        { id: 9, prompt: "Liczba o 500 większa od <strong>4 500</strong> to:", type: "input", ans: "5000", hint: "4500 + 500 = 5000." },
+        { id: 10, prompt: "Zapisz słowami liczbę 100000: ile to zer po jedynce?", type: "input", ans: "5", hint: "100 000 ma dokładnie 5 zer." }
+      ],
+
+      // -------------------------------------------------------------------------
+      // TEMAT 2: Porównywanie liczb naturalnych (58 str.)
+      // -------------------------------------------------------------------------
+      "2_1": [
+        { id: 1, prompt: "Wstaw poprawny znak: $48 \\;\\square\\; 52$", type: "choice", opts: ["<", ">", "="], ans: "<", hint: "48 jest mniejsze od 52." },
+        { id: 2, prompt: "Wstaw poprawny znak: $120 \\;\\square\\; 98$", type: "choice", opts: ["<", ">", "="], ans: ">", hint: "Liczba 3-cyfrowa jest zawsze większa od 2-cyfrowej!" },
+        { id: 3, prompt: "Wstaw poprawny znak: $345 \\;\\square\\; 354$", type: "choice", opts: ["<", ">", "="], ans: "<", hint: "Setki są równe, ale 4 dziesiątki < 5 dziesiątek." },
+        { id: 4, prompt: "Która liczba jest największa: <strong>231, 213, 233</strong>?", type: "choice", opts: ["231", "213", "233"], ans: "233", hint: "233 ma najwięcej jedności." },
+        { id: 5, prompt: "Wstaw poprawny znak: $701 \\;\\square\\; 699$", type: "choice", opts: ["<", ">", "="], ans: ">", hint: "7 setek to więcej niż 6 setek." },
+        { id: 6, prompt: "Wstaw poprawny znak: $450 \\;\\square\\; 400 + 50$", type: "choice", opts: ["<", ">", "="], ans: "=", hint: "400 + 50 to dokładnie 450." },
+        { id: 7, prompt: "Która liczba jest najmniejsza: <strong>810, 801, 818</strong>?", type: "choice", opts: ["810", "801", "818"], ans: "801", hint: "801 ma 0 dziesiątek." },
+        { id: 8, prompt: "Wstaw poprawny znak: $89 \\;\\square\\; 91$", type: "choice", opts: ["<", ">", "="], ans: "<", hint: "89 jest mniejsze od 91." },
+        { id: 9, prompt: "Wstaw poprawny znak: $505 \\;\\square\\; 550$", type: "choice", opts: ["<", ">", "="], ans: "<", hint: "0 dziesiątek to mniej niż 5 dziesiątek." },
+        { id: 10, prompt: "Liczba <strong>400</strong> jest większa od liczby:", type: "choice", opts: ["399", "401", "410"], ans: "399", hint: "400 > 399." }
+      ],
+      "2_2": [
+        { id: 1, prompt: "Wstaw znak: $1\\,240 \\;\\square\\; 1\\,204$", type: "choice", opts: ["<", ">", "="], ans: ">", hint: "4 dziesiątki to więcej niż 0 dziesiątek." },
+        { id: 2, prompt: "Wstaw znak: $5\\,678 \\;\\square\\; 5\\,687$", type: "choice", opts: ["<", ">", "="], ans: "<", hint: "78 < 87." },
+        { id: 3, prompt: "Wstaw znak: $9\\,999 \\;\\square\\; 10\\,000$", type: "choice", opts: ["<", ">", "="], ans: "<", hint: "Liczba 4-cyfrowa jest mniejsza od 5-cyfrowej." },
+        { id: 4, prompt: "Która liczba jest większa: <strong>3 405 czy 3 450</strong>?", type: "choice", opts: ["3 405", "3 450"], ans: "3 450", hint: "50 > 05." },
+        { id: 5, prompt: "Wstaw znak: $4\\,000 + 300 \\;\\square\\; 4\\,030$", type: "choice", opts: ["<", ">", "="], ans: ">", hint: "4300 > 4030." },
+        { id: 6, prompt: "Wstaw znak: $8\\,215 \\;\\square\\; 8\\,215$", type: "choice", opts: ["<", ">", "="], ans: "=", hint: "Są dokładnie równe." },
+        { id: 7, prompt: "Która liczba leży na osi liczbowej najbardziej na prawo: <strong>4200, 4020, 4202</strong>?", type: "choice", opts: ["4200", "4020", "4202"], ans: "4202", hint: "Najbardziej na prawo leży liczba największa: 4202." },
+        { id: 8, prompt: "Wstaw znak: $7\\,890 \\;\\square\\; 7\\,980$", type: "choice", opts: ["<", ">", "="], ans: "<", hint: "8 setek < 9 setek." },
+        { id: 9, prompt: "Wstaw znak: $15\\,400 \\;\\square\\; 14\\,999$", type: "choice", opts: ["<", ">", "="], ans: ">", hint: "15 tysięcy > 14 tysięcy." },
+        { id: 10, prompt: "Ile liczb całkowitych jest większych od 18 i mniejszych od 22?", type: "input", ans: "3", hint: "Są to liczby: 19, 20, 21 — czyli 3 liczby." }
+      ],
+      "2_3": [
+        { id: 1, prompt: "Wstaw znak: $35\\,080 \\;\\square\\; 35\\,800$", type: "choice", opts: ["<", ">", "="], ans: "<", hint: "0 setek < 8 setek." },
+        { id: 2, prompt: "Wstaw znak: $100\\,000 \\;\\square\\; 99\\,999$", type: "choice", opts: ["<", ">", "="], ans: ">", hint: "Liczba 6-cyfrowa > 5-cyfrowa." },
+        { id: 3, prompt: "Uporządkuj rosnąco: która jest najmniejsza z: <strong>60 200, 62 000, 60 020</strong>?", type: "choice", opts: ["60 200", "62 000", "60 020"], ans: "60 020", hint: "60 020 ma tylko 2 dziesiątki." },
+        { id: 4, prompt: "Wstaw znak: $48\\,500 \\;\\square\\; 40\\,000 + 8\\,500$", type: "choice", opts: ["<", ">", "="], ans: "=", hint: "40 000 + 8 500 = 48 500." },
+        { id: 5, prompt: "Jaka cyfra może stać zamiast gwiazdki, aby $5\\,4*2 < 5\\,412$?", type: "input", ans: "0", hint: "Tylko cyfra 0 da liczbę mniejszą od 5 412." },
+        { id: 6, prompt: "Wstaw znak: $72\\,430 \\;\\square\\; 72\\,403$", type: "choice", opts: ["<", ">", "="], ans: ">", hint: "30 > 03." },
+        { id: 7, prompt: "Która liczba jest najbliżej liczby <strong>1 000</strong>: 990 czy 1020?", type: "choice", opts: ["990", "1020"], ans: "990", hint: "Do 990 brakuje tylko 10, a do 1020 jest 20 różnicy." },
+        { id: 8, prompt: "Wstaw znak: $250\\,000 \\;\\square\\; 249\\,990$", type: "choice", opts: ["<", ">", "="], ans: ">", hint: "250 tysięcy to więcej niż 249 tysięcy." },
+        { id: 9, prompt: "Jaka jest największa liczba 3-cyfrowa mniejsza od 500?", type: "input", ans: "499", hint: "500 - 1 = 499." },
+        { id: 10, prompt: "Wstaw znak: $63\\,450 - 50 \\;\\square\\; 63\\,400$", type: "choice", opts: ["<", ">", "="], ans: "=", hint: "63 450 - 50 = 63 400." }
+      ],
+
+      // -------------------------------------------------------------------------
+      // TEMAT 3: Rachunki pamięciowe na dużych liczbach (60 str.) - SPECJALNOŚĆ Z ZERAMI!
+      // -------------------------------------------------------------------------
+      "3_1": [
+        { id: 1, prompt: "Oblicz dodawanie pełnych dziesiątek: $40 + 50 =$ ", type: "input", ans: "90", hint: "4 + 5 = 9, więc 40 + 50 = 90." },
+        { id: 2, prompt: "Oblicz odejmowanie: $90 - 30 =$ ", type: "input", ans: "60", hint: "9 - 3 = 6, dopisujemy 0." },
+        { id: 3, prompt: "Mnożenie przez dziesiątkę: $60 \\cdot 3 =$ ", type: "input", ans: "180", hint: "6 · 3 = 18, dopisujemy jedno zero = 180." },
+        { id: 4, prompt: "Mnożenie przez dziesiątkę: $4 \\cdot 70 =$ ", type: "input", ans: "280", hint: "4 · 7 = 28, dopisujemy zero = 280." },
+        { id: 5, prompt: "Dzielenie z zerami: $160 : 40 =$ ", type: "input", ans: "4", hint: "Skreślamy po jednym zerze: 16 : 4 = 4 (żadnych zer nie dopisujemy!)." },
+        { id: 6, prompt: "Dzielenie z zerami: $180 : 60 =$ ", type: "input", ans: "3", hint: "Skreślamy po jednym zerze: 18 : 6 = 3." },
+        { id: 7, prompt: "Oblicz: $300 + 400 =$ ", type: "input", ans: "700", hint: "3 setki + 4 setki = 7 setek = 700." },
+        { id: 8, prompt: "Oblicz: $800 - 500 =$ ", type: "input", ans: "300", hint: "800 - 500 = 300." },
+        { id: 9, prompt: "Mnożenie z dwoma zerami: $50 \\cdot 20 =$ ", type: "input", ans: "1000", hint: "5 · 2 = 10 i dopisujemy dwa zera = 1000." },
+        { id: 10, prompt: "Dzielenie: $240 : 4 =$ ", type: "input", ans: "60", hint: "24 : 4 = 6, dopisujemy zero = 60." }
+      ],
+      "3_2": [
+        { id: 1, prompt: "Dzielenie z dwoma zerami: $4800 : 800 =$ ", type: "input", ans: "6", hint: "Skreślamy po dwa zera z obu stron: 48 : 8 = 6!" },
+        { id: 2, prompt: "Dzielenie z dwoma zerami: $3500 : 700 =$ ", type: "input", ans: "5", hint: "Skreślamy po dwa zera: 35 : 7 = 5." },
+        { id: 3, prompt: "Uwaga na zera! $5600 : 70 =$ ", type: "input", ans: "80", hint: "Skreślamy po jednym zerze: 560 : 7 = 80!" },
+        { id: 4, prompt: "Uwaga na zera! $4200 : 60 =$ ", type: "input", ans: "70", hint: "Skreślamy po jednym zerze: 420 : 6 = 70." },
+        { id: 5, prompt: "Mnożenie: $60 \\cdot 70 =$ ", type: "input", ans: "4200", hint: "6 · 7 = 42 i dopisujemy dwa zera = 4200." },
+        { id: 6, prompt: "Mnożenie: $400 \\cdot 6 =$ ", type: "input", ans: "2400", hint: "4 · 6 = 24 i dwa zera = 2400." },
+        { id: 7, prompt: "Dzielenie: $6300 : 900 =$ ", type: "input", ans: "7", hint: "63 : 9 = 7." },
+        { id: 8, prompt: "Dzielenie: $270 : 90 =$ ", type: "input", ans: "3", hint: "Skreślamy po jednym zerze: 27 : 9 = 3." },
+        { id: 9, prompt: "Oblicz sumę: $1\\,200 + 800 =$ ", type: "input", ans: "2000", hint: "1200 + 800 = 2000." },
+        { id: 10, prompt: "Oblicz różnicę: $5\\,000 - 1\\,400 =$ ", type: "input", ans: "3600", hint: "5000 - 1400 = 3600." }
+      ],
+      "3_3": [
+        { id: 1, prompt: "Mistrzowskie dzielenie: $7200 : 80 =$ ", type: "input", ans: "90", hint: "Skreślamy po jednym zerze: 720 : 8 = 90." },
+        { id: 2, prompt: "Dzielenie z zerami: $8100 : 900 =$ ", type: "input", ans: "9", hint: "Skreślamy dwa zera: 81 : 9 = 9." },
+        { id: 3, prompt: "Dzielenie: $3200 : 40 =$ ", type: "input", ans: "80", hint: "Skreślamy po jednym zerze: 320 : 4 = 80." },
+        { id: 4, prompt: "Dzielenie: $4000 : 500 =$ ", type: "input", ans: "8", hint: "Skreślamy dwa zera: 40 : 5 = 8." },
+        { id: 5, prompt: "Mnożenie setek: $80 \\cdot 90 =$ ", type: "input", ans: "7200", hint: "8 · 9 = 72 i dwa zera = 7200." },
+        { id: 6, prompt: "Oblicz: $500 \\cdot 70 =$ ", type: "input", ans: "35000", hint: "5 · 7 = 35 i trzy zera = 35 000." },
+        { id: 7, prompt: "Dzielenie: $54000 : 600 =$ ", type: "input", ans: "90", hint: "Skreślamy po dwa zera: 540 : 6 = 90." },
+        { id: 8, prompt: "Oblicz: $10\\,000 : 200 =$ ", type: "input", ans: "50", hint: "Skreślamy po dwa zera: 100 : 2 = 50." },
+        { id: 9, prompt: "Działanie łączone: $40 \\cdot 50 + 800 =$ ", type: "input", ans: "2800", hint: "40 · 50 = 2000; 2000 + 800 = 2800." },
+        { id: 10, prompt: "Działanie łączone: $6400 : 80 - 30 =$ ", type: "input", ans: "50", hint: "6400 : 80 = 80; 80 - 30 = 50." }
+      ],
+
+      // -------------------------------------------------------------------------
+      // TEMAT 4: Jednostki monetarne — złote i grosze (64 str.)
+      // -------------------------------------------------------------------------
+      "4_1": [
+        { id: 1, prompt: "Ile groszy to <strong>1 zł</strong>?", type: "choice", opts: ["10 gr", "50 gr", "100 gr"], ans: "100 gr", hint: "1 złoty to dokładnie 100 groszy!" },
+        { id: 2, prompt: "Zamień na grosze: <strong>3 zł</strong> to:", type: "input", ans: "300", hint: "3 · 100 gr = 300 groszy." },
+        { id: 3, prompt: "Zamień na grosze: <strong>5 zł i 40 gr</strong> to łącznie ile groszy?", type: "input", ans: "540", hint: "500 gr + 40 gr = 540 gr." },
+        { id: 4, prompt: "Ile to pełnych złotych: <strong>400 gr</strong>?", type: "input", ans: "4", hint: "400 : 100 = 4 zł." },
+        { id: 5, prompt: "Ile monet 50-groszowych tworzy <strong>1 złoty</strong>?", type: "choice", opts: ["2", "4", "5"], ans: "2", hint: "50 gr + 50 gr = 100 gr = 1 zł." },
+        { id: 6, prompt: "Ile monet 20-groszowych tworzy <strong>1 złoty</strong>?", type: "choice", opts: ["2", "5", "10"], ans: "5", hint: "5 · 20 gr = 100 gr = 1 zł." },
+        { id: 7, prompt: "Oblicz sumę: $2\\text{ zł } 30\\text{ gr} + 4\\text{ zł } 50\\text{ gr} =$ ile to groszy?", type: "input", ans: "680", hint: "6 zł 80 gr = 680 groszy." },
+        { id: 8, prompt: "Cukierek kosztuje 60 gr. Płacisz monetą 1 zł. Ile groszy reszty otrzymasz?", type: "input", ans: "40", hint: "100 gr - 60 gr = 40 groszy reszty." },
+        { id: 9, prompt: "Zamień na grosze: <strong>7 zł i 5 gr</strong> to ile groszy?", type: "input", ans: "705", hint: "700 gr + 5 gr = 705 gr (pamiętaj o zerze!)." },
+        { id: 10, prompt: "Lollipop kosztuje 2 zł. Masz 10 zł. Ile takich lizaków możesz kupić?", type: "input", ans: "5", hint: "10 : 2 = 5 lizaków." }
+      ],
+      "4_2": [
+        { id: 1, prompt: "Zamień na złote i grosze: <strong>850 gr</strong> to ile pełnych złotych?", type: "input", ans: "8", hint: "850 gr to 8 zł i 50 gr." },
+        { id: 2, prompt: "Zamień na grosze: <strong>14 zł i 20 gr</strong> to:", type: "input", ans: "1420", hint: "14 · 100 + 20 = 1420 gr." },
+        { id: 3, prompt: "Zeszyt kosztuje 3 zł 80 gr. Kupujesz dwa takie zeszyty. Ile zapłacisz w groszach?", type: "input", ans: "760", hint: "2 · 380 gr = 760 gr (czyli 7 zł 60 gr)." },
+        { id: 4, prompt: "W portmonetce są: 3 monety 2 zł i 4 monety 50 gr. Ile to łącznie złotych?", type: "input", ans: "8", hint: "3 · 2 zł = 6 zł, 4 · 50 gr = 2 zł; razem: 8 zł." },
+        { id: 5, prompt: "Płacisz banknotem 20 zł za książkę o cenie 14 zł 50 gr. Ile groszy reszty dostaniesz?", type: "input", ans: "550", hint: "20 zł - 14 zł 50 gr = 5 zł 50 gr = 550 gr." },
+        { id: 6, prompt: "Ile monet 10-groszowych tworzy <strong>5 złotych</strong>?", type: "input", ans: "50", hint: "5 zł to 500 gr. 500 : 10 = 50 monet." },
+        { id: 7, prompt: "Kasia miała 15 zł. Wydała 6 zł 40 gr. Ile groszy jej zostało?", type: "input", ans: "860", hint: "15 zł - 6 zł 40 gr = 8 zł 60 gr = 860 gr." },
+        { id: 8, prompt: "Jeden sok kosztuje 2 zł 50 gr. Ile kosztują 4 takie soki w złotych?", type: "input", ans: "10", hint: "4 · 2,50 zł = 10 zł." },
+        { id: 9, prompt: "Cena piórnika to 23 zł, a po rabacie jest tańszy o 4 zł 50 gr. Jaka jest nowa cena w groszach?", type: "input", ans: "1850", hint: "23 zł - 4 zł 50 gr = 18 zł 50 gr = 1850 gr." },
+        { id: 10, prompt: "Zamień <strong>2 005 gr</strong> na złote: ile to pełnych złotych?", type: "input", ans: "20", hint: "2005 gr = 20 zł i 5 gr." }
+      ],
+      "4_3": [
+        { id: 1, prompt: "Trzy koleżanki kupiły pizzę za 36 zł i podzieliły koszt po równo. Ile złotych zapłaciła każda?", type: "input", ans: "12", hint: "36 zł : 3 = 12 zł." },
+        { id: 2, prompt: "Basia miała banknot 50 zł. Kupiła bilet do kina za 22 zł 50 gr i popcorn za 11 zł 50 gr. Ile groszy jej zostało?", type: "input", ans: "1600", hint: "22,50 + 11,50 = 34 zł. 50 - 34 = 16 zł = 1600 gr." },
+        { id: 3, prompt: "Cena 1 kg jabłek to 4 zł. Ile zapłacisz za 2 kg i 50 dag (czyli 2 i pół kg) w złotych?", type: "input", ans: "10", hint: "2 kg = 8 zł, pół kg = 2 zł. Razem 10 zł." },
+        { id: 4, prompt: "Za 5 jednakowych flamastrów zapłacono 17 zł 50 gr. Ile groszy kosztuje jeden flamaster?", type: "input", ans: "350", hint: "1750 gr : 5 = 350 gr (czyli 3 zł 50 gr)." },
+        { id: 5, prompt: "Kupiono 3 czekolady po 4 zł 60 gr. Płacisz banknotem 20 zł. Ile groszy reszty otrzymasz?", type: "input", ans: "620", hint: "3 · 4,60 zł = 13,80 zł. 20 zł - 13,80 zł = 6,20 zł = 620 gr." },
+        { id: 6, prompt: "Ola zbiera monety 5 zł. Zebrała już 15 takich monet. Ile to łącznie złotych?", type: "input", ans: "75", hint: "15 · 5 zł = 75 zł." },
+        { id: 7, prompt: "Gra planszowa kosztuje 85 zł. Zosia ma 59 zł 50 gr. Ile groszy brakuje jej do zakupu?", type: "input", ans: "2550", hint: "85 zł - 59 zł 50 gr = 25 zł 50 gr = 2550 gr." },
+        { id: 8, prompt: "Zestaw kredek kosztuje 18 zł 80 gr, a blok rysunkowy 6 zł 40 gr. Ile złotych i groszy kosztują razem? Podaj łączną liczbę groszy:", type: "input", ans: "2520", hint: "1880 gr + 640 gr = 2520 gr (25 zł 20 gr)." },
+        { id: 9, prompt: "Ile reszty z 100 zł zostanie po zakupach za 73 zł 20 gr? Podaj w groszach:", type: "input", ans: "2680", hint: "100 zł - 73,20 zł = 26 zł 80 gr = 2680 gr." },
+        { id: 10, prompt: "W skarbonce było 120 zł w monetach 2-złotowych. Ile monet było w skarbonce?", type: "input", ans: "60", hint: "120 : 2 = 60 monet." }
+      ],
+
+      // -------------------------------------------------------------------------
+      // TEMAT 5: Jednostki długości (68 str.)
+      // -------------------------------------------------------------------------
+      "5_1": [
+        { id: 1, prompt: "Ile milimetrów ($mm$) ma <strong>1 centymetr ($cm$)</strong>?", type: "choice", opts: ["10 mm", "100 mm", "1000 mm"], ans: "10 mm", hint: "1 cm to 10 milimetrów na linijce." },
+        { id: 2, prompt: "Ile centymetrów ($cm$) ma <strong>1 metr ($m$)</strong>?", type: "choice", opts: ["10 cm", "100 cm", "1000 cm"], ans: "100 cm", hint: "1 m to dokładnie 100 cm." },
+        { id: 3, prompt: "Ile metrów ($m$) ma <strong>1 kilometr ($km$)</strong>?", type: "choice", opts: ["100 m", "500 m", "1000 m"], ans: "1000 m", hint: "Przedrostek kilo oznacza 1000, więc 1 km = 1000 m." },
+        { id: 4, prompt: "Zamień na milimetry: <strong>6 cm</strong> to ile $mm$?", type: "input", ans: "60", hint: "6 · 10 mm = 60 mm." },
+        { id: 5, prompt: "Zamień na centymetry: <strong>4 m</strong> to ile $cm$?", type: "input", ans: "400", hint: "4 · 100 cm = 400 cm." },
+        { id: 6, prompt: "Ile centymetrów ma <strong>1 decymetr ($dm$)</strong>?", type: "choice", opts: ["10 cm", "50 cm", "100 cm"], ans: "10 cm", hint: "1 dm = 10 cm." },
+        { id: 7, prompt: "Wstążka ma 2 m długości. Ile to centymetrów?", type: "input", ans: "200", hint: "2 · 100 = 200 cm." },
+        { id: 8, prompt: "Ołówek ma długość 15 cm. Ile to milimetrów?", type: "input", ans: "150", hint: "15 · 10 mm = 150 mm." },
+        { id: 9, prompt: "Trasa ma 3 km. Ile to metrów?", type: "input", ans: "3000", hint: "3 · 1000 m = 3000 m." },
+        { id: 10, prompt: "Która długość jest większa: <strong>1 m czy 90 cm</strong>?", type: "choice", opts: ["1 m", "90 cm"], ans: "1 m", hint: "1 m = 100 cm, a 100 cm > 90 cm." }
+      ],
+      "5_2": [
+        { id: 1, prompt: "Zamień na milimetry: <strong>8 cm i 4 mm</strong> to łącznie ile $mm$?", type: "input", ans: "84", hint: "80 mm + 4 mm = 84 mm." },
+        { id: 2, prompt: "Zamień na centymetry: <strong>3 m i 25 cm</strong> to ile $cm$?", type: "input", ans: "325", hint: "300 cm + 25 cm = 325 cm." },
+        { id: 3, prompt: "Zamień na metry: <strong>4 km i 500 m</strong> to ile $m$?", type: "input", ans: "4500", hint: "4000 m + 500 m = 4500 m." },
+        { id: 4, prompt: "Ile centymetrów to <strong>7 dm</strong>?", type: "input", ans: "70", hint: "1 dm = 10 cm, więc 7 dm = 70 cm." },
+        { id: 5, prompt: "Zamień na centymetry i milimetry: <strong>95 mm</strong> to ile pełnych centymetrów?", type: "input", ans: "9", hint: "95 mm = 9 cm i 5 mm." },
+        { id: 6, prompt: "Sznurek ma 500 cm długości. Ile to pełnych metrów?", type: "input", ans: "5", hint: "500 : 100 = 5 m." },
+        { id: 7, prompt: "Ślimak przeszedł 120 cm. Ile to decymetrów ($dm$)?", type: "input", ans: "12", hint: "120 : 10 = 12 dm." },
+        { id: 8, prompt: "Wstaw odpowiedni znak: $2\\text{ m } 5\\text{ cm} \\;\\square\\; 250\\text{ cm}$", type: "choice", opts: ["<", ">", "="], ans: "<", hint: "2 m 5 cm = 205 cm, a 205 cm < 250 cm!" },
+        { id: 9, prompt: "Od tasiemki o długości 1 m odcięto 30 cm. Ile centymetrów zostało?", type: "input", ans: "70", hint: "100 cm - 30 cm = 70 cm." },
+        { id: 10, prompt: "Droga do szkoły ma 1 km 200 m. Ile to metrów?", type: "input", ans: "1200", hint: "1000 m + 200 m = 1200 m." }
+      ],
+      "5_3": [
+        { id: 1, prompt: "Biegacz przebiegł trasę 5 km 80 m. Ile to dokładnie metrów?", type: "input", ans: "5080", hint: "5000 m + 80 m = 5080 m (uwaga na zero w rzędzie setek!)." },
+        { id: 2, prompt: "Obwód kwadratu o boku 25 cm wynosi w metrach:", type: "input", ans: "1", hint: "4 · 25 cm = 100 cm = 1 m." },
+        { id: 3, prompt: "Z kłębka wełny o długości 8 m zrobiono 4 jednakowe czapeczki. Ile centymetrów wełny zużyto na jedną czapeczkę?", type: "input", ans: "200", hint: "8 m = 800 cm. 800 : 4 = 200 cm (czyli 2 m)." },
+        { id: 4, prompt: "Wstaw znak: $3\\text{ km } 40\\text{ m} \\;\\square\\; 3400\\text{ m}$", type: "choice", opts: ["<", ">", "="], ans: "<", hint: "3 km 40 m = 3040 m, co jest mniejsze od 3400 m." },
+        { id: 5, prompt: "Drabina ma długość 3 m 60 cm. Ile to decymetrów ($dm$)?", type: "input", ans: "36", hint: "360 cm : 10 = 36 dm." },
+        { id: 6, prompt: "Książka ma grubość 2 cm 8 mm. Ile to milimetrów?", type: "input", ans: "28", hint: "20 mm + 8 mm = 28 mm." },
+        { id: 7, prompt: "Trawnik ma wymiary 12 m na 8 m. Ile metrów ogrodzenia potrzeba, by go otoczyć (obwód)?", type: "input", ans: "40", hint: "12 + 8 + 12 + 8 = 40 m." },
+        { id: 8, prompt: "Zamień na centymetry: <strong>6 m 4 dm 5 cm</strong> to łącznie ile $cm$?", type: "input", ans: "645", hint: "600 cm + 40 cm + 5 cm = 645 cm." },
+        { id: 9, prompt: "Rowerzysta pokonał 14 km, a pieszy 3 500 m. O ile metrów więcej pokonał rowerzysta?", type: "input", ans: "10500", hint: "14 000 m - 3 500 m = 10 500 m." },
+        { id: 10, prompt: "Z deski o długości 2 m 40 cm odcięto 4 równe kawałki. Ile centymetrów ma każdy kawałek?", type: "input", ans: "60", hint: "240 cm : 4 = 60 cm." }
+      ]
+    };
+
+    // Helper banner content depending on topic
+    const helpers = {
+      1: `
+        <span class="text-2xl">💡</span>
+        <div>
+          <div class="font-extrabold text-pink-700">Wskazówka: System dziesiątkowy</div>
+          <p class="text-xs text-slate-600 mt-0.5">Każde miejsce w liczbie ma swoją nazwę: od prawej mamy <strong>jedności</strong> (1), potem <strong>dziesiątki</strong> (10), <strong>setki</strong> (100), <strong>tysiące</strong> (1000) i <strong>dziesiątki tysięcy</strong> (10 000). Jeśli jakiegoś rzędu brakuje — piszemy cyfrę 0!</p>
+        </div>
+      `,
+      2: `
+        <span class="text-2xl">⚖️</span>
+        <div>
+          <div class="font-extrabold text-purple-700">Wskazówka: Porównywanie liczb naturalnych</div>
+          <p class="text-xs text-slate-600 mt-0.5">Zawsze najpierw policz cyfry! Liczba z większą liczbą cyfr jest większa (np. $1000 > 999$). Jeśli liczba cyfr jest taka sama, porównuj cyfry od lewej do prawej strony!</p>
+        </div>
+      `,
+      3: `
+        <span class="text-2xl">🎀</span>
+        <div>
+          <div class="font-extrabold text-rose-700">Magiczna zasada dzielenia z zerami (punkt 3b!):</div>
+          <p class="text-xs text-slate-600 mt-0.5">Gdy dzielisz liczby z zerami: <strong>skreślasz dokładnie tyle samo zer w dzielniku, ile w dzielnej!</strong><br>
+          Np. $160 : 40 = 16 : 4 = \\mathbf{4}$. Albo $4800 : 800 = 48 : 8 = \\mathbf{6}$. A w $5600 : 70 = 560 : 7 = \\mathbf{80}$.</p>
+        </div>
+      `,
+      4: `
+        <span class="text-2xl">💰</span>
+        <div>
+          <div class="font-extrabold text-amber-700">Wskazówka: Jednostki monetarne — złote i grosze</div>
+          <p class="text-xs text-slate-600 mt-0.5">Najważniejsza zasada: <strong>$1\\text{ zł} = 100\\text{ gr}$</strong>! Zamieniając złote na grosze, dopisujesz dwa zera (np. $4\\text{ zł} = 400\\text{ gr}$). Uważaj przy liczbach jednocyfrowych: $5\\text{ zł } 4\\text{ gr} = 504\\text{ gr}$, a nie $54\\text{ gr}$!</p>
+        </div>
+      `,
+      5: `
+        <span class="text-2xl">📏</span>
+        <div>
+          <div class="font-extrabold text-sky-700">Wskazówka: Jednostki długości</div>
+          <p class="text-xs text-slate-600 mt-0.5">Zapamiętaj magiczną drabinkę miar:<br>
+          • $1\\text{ cm} = 10\\text{ mm}$<br>
+          • $1\\text{ dm} = 10\\text{ cm} = 100\\text{ mm}$<br>
+          • $1\\text{ m} = 10\\text{ dm} = 100\\text{ cm}$<br>
+          • $1\\text{ km} = 1000\\text{ m}$</p>
+        </div>
+      `
+    };
+
+    function selectTopic(topicNum) {
+      currentTopic = topicNum;
+      
+      // Update topic buttons UI (5 topics)
+      for (let i = 1; i <= 5; i++) {
+        const btn = document.getElementById(`btn-topic-${i}`);
+        if (!btn) continue;
+        if (i === topicNum) {
+          btn.className = "topic-btn flex-1 min-w-[150px] py-2.5 px-3 rounded-2xl font-extrabold text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5 bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-md";
+        } else {
+          btn.className = "topic-btn flex-1 min-w-[150px] py-2.5 px-3 rounded-2xl font-bold text-xs sm:text-sm text-slate-600 hover:bg-pink-50 transition-all flex items-center justify-center gap-1.5";
+        }
+      }
+
+      document.getElementById('topic-helper').innerHTML = helpers[topicNum];
+      renderCards();
+    }
+
+    function selectLevel(lvlNum) {
+      currentLevel = lvlNum;
+
+      // Update level buttons UI
+      for (let i = 1; i <= 3; i++) {
+        const btn = document.getElementById(`lvl-btn-${i}`);
+        if (i === lvlNum) {
+          btn.className = "lvl-btn px-3 py-1.5 rounded-xl text-xs font-extrabold bg-pink-500 text-white shadow transition";
+        } else {
+          btn.className = "lvl-btn px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-pink-50 transition";
+        }
+      }
+
+      renderCards();
+    }
+
+    function renderCards() {
+      const container = document.getElementById('cards-container');
+      const key = `${currentTopic}_${currentLevel}`;
+      const tasks = database[key] || [];
+
+      container.innerHTML = tasks.map((task, idx) => {
+        const uniqueKey = `${currentTopic}_${currentLevel}_${task.id}`;
+        const isSolved = solvedKeys.has(uniqueKey);
+        const existingAns = studentResponses[uniqueKey]?.answer || '';
+
+        let inputControl = '';
+        if (task.type === 'choice') {
+          inputControl = `
+            <div class="flex flex-wrap gap-2 mt-3">
+              ${task.opts.map(opt => `
+                <button onclick="handleChoiceClick('${uniqueKey}', '${opt}', '${task.ans}', this, '${task.prompt.replace(/'/g, "\\'")}')" 
+                  class="choice-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold border transition-all ${
+                    existingAns === opt
+                      ? (isSolved ? 'bg-emerald-500 text-white border-emerald-600 shadow' : 'bg-rose-100 text-rose-700 border-rose-300')
+                      : 'bg-slate-50 text-slate-700 hover:bg-pink-50 border-slate-200'
+                  }">
+                  ${opt}
+                </button>
+              `).join('')}
+            </div>
+          `;
+        } else {
+          inputControl = `
+            <div class="flex items-center gap-2 mt-3">
+              <input type="text" id="inp-${uniqueKey}" 
+                value="${existingAns || (isSolved ? task.ans : '')}" 
+                oninput="handleInputChange('${uniqueKey}', '${task.ans}', this, '${task.prompt.replace(/'/g, "\\'")}')" 
+                placeholder="Wpisz wynik..." 
+                class="w-full sm:w-48 text-center font-extrabold text-sm p-2 rounded-xl border ${
+                  isSolved ? 'bg-emerald-50 border-emerald-400 text-emerald-800' : 'bg-rose-50/40 border-pink-200 text-rose-800 focus:outline-none focus:ring-2 focus:ring-pink-300'
+                }">
+              ${isSolved ? '<span class="text-emerald-500 text-lg font-black">✓</span>' : ''}
+            </div>
+          `;
+        }
+
+        return `
+          <div id="card-${uniqueKey}" class="cute-card bg-white p-4 sm:p-5 rounded-3xl border ${isSolved ? 'border-emerald-300 bg-emerald-50/20' : 'border-pink-200/80'} shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="inline-flex items-center justify-center w-7 h-7 rounded-xl ${isSolved ? 'bg-emerald-500 text-white' : 'bg-pink-100 text-pink-700'} font-black text-xs">
+                  ${idx + 1}
+                </span>
+                <span class="text-[11px] font-bold text-slate-400 flex items-center gap-1">
+                  <span>${isSolved ? '🌸 Rozwiązane!' : '⭐ 1 kryształek'}</span>
+                </span>
+              </div>
+
+              <div class="text-xs sm:text-sm text-slate-800 leading-relaxed font-semibold">
+                ${task.prompt}
+              </div>
+
+              ${inputControl}
+            </div>
+
+            <!-- Hint toggle -->
+            <div class="mt-3 pt-2 border-t border-pink-100/60 flex items-center justify-between">
+              <button onclick="toggleHint('hint-${uniqueKey}')" class="text-[11px] font-bold text-pink-500 hover:text-pink-700 transition flex items-center gap-1">
+                <span>💡 Wskazówka</span>
+              </button>
+              <div id="hint-${uniqueKey}" class="hidden text-[11px] text-slate-600 bg-pink-50/80 p-2 rounded-xl border border-pink-200 mt-1 w-full">
+                ${task.hint}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      updateProgressBar();
+
+      // Rerender math formulas
+      if (window.renderMathInElement) {
+        renderMathInElement(container, {
+          delimiters: [
+            { left: "$$", right: "$$", display: true },
+            { left: "$", right: "$", display: false }
+          ],
+          throwOnError: false
+        });
+      }
+    }
+
+    function handleChoiceClick(key, selected, correct, btnElem) {
+      if (selected.trim().toLowerCase() === correct.trim().toLowerCase()) {
+        solvedKeys.add(key);
+        playBeep(true);
+        confetti({
+          particleCount: 30,
+          spread: 45,
+          origin: { y: 0.7 }
+        });
+        renderCards();
+      } else {
+        playBeep(false);
+        btnElem.classList.add('bg-rose-100', 'border-rose-400', 'text-rose-700', 'animate-shake');
+        setTimeout(() => {
+          btnElem.classList.remove('bg-rose-100', 'border-rose-400', 'text-rose-700', 'animate-shake');
+        }, 500);
+      }
+    }
+
+    function handleInputChange(key, correct, inpElem) {
+      const val = inpElem.value.trim().toLowerCase();
+      const expected = correct.trim().toLowerCase();
+
+      if (val === expected) {
+        solvedKeys.add(key);
+        playBeep(true);
+        confetti({
+          particleCount: 35,
+          spread: 50,
+          origin: { y: 0.7 }
+        });
+        renderCards();
+      }
+    }
+
+    function toggleHint(hintId) {
+      const hint = document.getElementById(hintId);
+      if (hint) {
+        hint.classList.toggle('hidden');
+      }
+    }
+
+    function updateProgressBar() {
+      // Sub level progress (0..10)
+      let currentLevelSolved = 0;
+      for (let i = 1; i <= 10; i++) {
+        if (solvedKeys.has(`${currentTopic}_${currentLevel}_${i}`)) {
+          currentLevelSolved++;
+        }
+      }
+      const pct = (currentLevelSolved / 10) * 100;
+      document.getElementById('sub-progress-bar').style.width = `${pct}%`;
+      document.getElementById('sub-progress-text').textContent = `${currentLevelSolved} / 10`;
+
+      // Overall score counter (now out of 150 tasks)
+      document.getElementById('score-counter').textContent = `${solvedKeys.size} / 150`;
+    }
+
+    function recordStudentAnswer(key, givenAns, expectedAns, isCorrect, rawPrompt) {
+      studentResponses[key] = {
+        prompt: rawPrompt ? rawPrompt.replace(/<[^>]*>/g, '').trim() : "Zadanie",
+        answer: givenAns,
+        expected: expectedAns,
+        correct: isCorrect,
+        timestamp: new Date().toLocaleTimeString(),
+        topic: TOPIC_NAMES[currentTopic],
+        level: LEVEL_NAMES[currentLevel]
+      };
+      updateFloatingBadge();
+    }
+
+    function handleChoiceClick(key, selected, correct, btnElem, rawPrompt) {
+      const isCorrect = selected.trim().toLowerCase() === correct.trim().toLowerCase();
+      recordStudentAnswer(key, selected, correct, isCorrect, rawPrompt);
+
+      if (isCorrect) {
+        solvedKeys.add(key);
+        playBeep(true);
+        confetti({
+          particleCount: 30,
+          spread: 45,
+          origin: { y: 0.7 }
+        });
+      } else {
+        solvedKeys.delete(key);
+        playBeep(false);
+        btnElem.classList.add('bg-rose-100', 'border-rose-400', 'text-rose-700', 'animate-shake');
+        setTimeout(() => {
+          btnElem.classList.remove('bg-rose-100', 'border-rose-400', 'text-rose-700', 'animate-shake');
+        }, 500);
+      }
+      renderCards();
+    }
+
+    function handleInputChange(key, correct, inpElem, rawPrompt) {
+      const val = inpElem.value.trim();
+      if (!val) {
+        delete studentResponses[key];
+        solvedKeys.delete(key);
+        updateProgressBar();
+        updateFloatingBadge();
+        return;
+      }
+
+      const expected = correct.trim().toLowerCase();
+      const isCorrect = val.toLowerCase() === expected;
+      recordStudentAnswer(key, val, correct, isCorrect, rawPrompt);
+
+      if (isCorrect) {
+        solvedKeys.add(key);
+        playBeep(true);
+        confetti({
+          particleCount: 35,
+          spread: 50,
+          origin: { y: 0.7 }
+        });
+        inpElem.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800');
+        inpElem.classList.remove('bg-rose-50/40', 'border-pink-200');
+      } else {
+        solvedKeys.delete(key);
+        inpElem.classList.remove('bg-emerald-50', 'border-emerald-400', 'text-emerald-800');
+      }
+      updateProgressBar();
+    }
+
+    function toggleHint(hintId) {
+      const hint = document.getElementById(hintId);
+      if (hint) {
+        hint.classList.toggle('hidden');
+      }
+    }
+
+    function updateFloatingBadge() {
+      const count = Object.keys(studentResponses).length;
+      const badge = document.getElementById('floating-badge');
+      if (badge) {
+        badge.textContent = `${count} odp.`;
+      }
+    }
+
+    function updateProgressBar() {
+      // Sub level progress (0..10)
+      let currentLevelSolved = 0;
+      for (let i = 1; i <= 10; i++) {
+        if (solvedKeys.has(`${currentTopic}_${currentLevel}_${i}`)) {
+          currentLevelSolved++;
+        }
+      }
+      const pct = (currentLevelSolved / 10) * 100;
+      document.getElementById('sub-progress-bar').style.width = `${pct}%`;
+      document.getElementById('sub-progress-text').textContent = `${currentLevelSolved} / 10`;
+
+      // Overall score counter (now out of 150 tasks)
+      document.getElementById('score-counter').textContent = `${solvedKeys.size} / 150`;
+    }
+
+    // GENEROWANIE I WYSYŁKA RAPORTU NA E-MAIL
+    function generateReportText() {
+      const studentName = document.getElementById('student-name')?.value.trim() || 'Uczennica Klasy 4';
+      const studentComment = document.getElementById('student-comment')?.value.trim() || 'Brak komentarza';
+      const totalAnswered = Object.keys(studentResponses).length;
+      const totalCorrect = solvedKeys.size;
+      const dateStr = new Date().toLocaleString('pl-PL');
+
+      let text = `RAPORT WYNIKÓW: MAGIA MATEMATYKI (KLASA 4)\n`;
+      text += `Data: ${dateStr}\n`;
+      text += `Uczennica: ${studentName}\n`;
+      text += `Wynik punktowy: ${totalCorrect} / 150 kryształków\n`;
+      text += `Liczba rozwiązanych zadań: ${totalAnswered} / 150\n`;
+      text += `Komentarz uczennicy: ${studentComment}\n\n`;
+      text += `--------------------------------------------------------\n`;
+      text += `SZCZEGÓŁOWE ODPOWIEDZI:\n`;
+
+      if (totalAnswered === 0) {
+        text += `(Brak wprowadzonych odpowiedzi przed otwarciem raportu)\n`;
+      } else {
+        let index = 1;
+        for (const [key, item] of Object.entries(studentResponses)) {
+          const status = item.correct ? '✓ POPRAWNIE' : '✗ BŁĄD / DO POPRAWY';
+          text += `[${index}] ${item.topic} | ${item.level}\n`;
+          text += `    Pytanie: ${item.prompt}\n`;
+          text += `    Odpowiedź uczennicy: "${item.answer}" -> ${status} (Właściwa: "${item.expected}")\n`;
+          text += `    Godzina: ${item.timestamp}\n\n`;
+          index++;
+        }
+      }
+
+      text += `--------------------------------------------------------\n`;
+      text += `Wysłano z: Magiczna Kraina Matematyki (violettamaruk@gmail.com)\n`;
+      return text;
+    }
+
+    function openSendReportModal() {
+      const modal = document.getElementById('email-modal');
+      const correctCount = solvedKeys.size;
+      const answeredCount = Object.keys(studentResponses).length;
+
+      document.getElementById('modal-correct-count').textContent = correctCount;
+      document.getElementById('modal-answered-count').textContent = answeredCount;
+      document.getElementById('report-preview-box').value = generateReportText();
+
+      // Listen for name & comment changes to update live preview
+      const nameInput = document.getElementById('student-name');
+      const commentInput = document.getElementById('student-comment');
+      nameInput.oninput = () => {
+        document.getElementById('report-preview-box').value = generateReportText();
+      };
+      commentInput.oninput = () => {
+        document.getElementById('report-preview-box').value = generateReportText();
+      };
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeSendReportModal() {
+      const modal = document.getElementById('email-modal');
+      modal.classList.add('hidden');
+      const status = document.getElementById('copy-status');
+      if (status) status.classList.add('hidden');
+    }
+
+    function sendViaMailto() {
+      const recipient = "violettamaruk@gmail.com";
+      const studentName = document.getElementById('student-name')?.value.trim() || 'Uczennica';
+      const subject = encodeURIComponent(`Wyniki z matematyki (Klasa 4) - ${studentName} [${solvedKeys.size}/150 💎]`);
+      const body = encodeURIComponent(generateReportText());
+      window.location.href = `mailto:${recipient}?subject=${subject}&body=${body}`;
+    }
+
+    function copyReportToClipboard() {
+      const reportText = generateReportText();
+      const tempArea = document.createElement("textarea");
+      tempArea.value = reportText;
+      tempArea.style.position = "fixed";
+      tempArea.style.left = "-9999px";
+      document.body.appendChild(tempArea);
+      tempArea.select();
+      try {
+        document.execCommand('copy');
+        const status = document.getElementById('copy-status');
+        if (status) {
+          status.classList.remove('hidden');
+          setTimeout(() => status.classList.add('hidden'), 3500);
+        }
+      } catch (err) {
+        console.error('Błąd kopiowania:', err);
+      }
+      document.body.removeChild(tempArea);
+    }
+
+    window.onload = function() {
+      selectTopic(1);
+    };
+  </script>
+</body>
+</html>
