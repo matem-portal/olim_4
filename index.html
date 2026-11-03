@@ -260,13 +260,15 @@
 
       <!-- Akcje -->
       <div class="mt-3 pt-2 sm:pt-3 border-t border-slate-100 flex flex-col sm:flex-row gap-2">
-        <button onclick="sendViaMailto()" class="flex-1 py-2.5 sm:py-3 px-4 bg-gradient-to-r from-pink-500 to-rose-600 active:scale-95 text-white font-black text-xs sm:text-sm rounded-xl shadow-md transition flex items-center justify-center gap-1.5 min-h-[44px]">
-          <span>🚀 Otwórz pocztę i wyślij</span>
+        <button id="send-report-btn" onclick="sendDirectlyToEmail()" class="flex-1 py-2.5 sm:py-3 px-4 bg-gradient-to-r from-pink-500 to-rose-600 active:scale-95 text-white font-black text-xs sm:text-sm rounded-xl shadow-md transition flex items-center justify-center gap-1.5 min-h-[44px]">
+          <span id="send-btn-icon">🚀</span>
+          <span id="send-btn-text">Wyślij automatycznie</span>
         </button>
         <button onclick="copyReportToClipboard()" id="copy-report-btn" class="py-2.5 sm:py-3 px-4 bg-slate-100 active:scale-95 text-slate-700 font-bold text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-1 min-h-[44px]">
           <span>📋 Kopiuj raport</span>
         </button>
       </div>
+      <div id="send-feedback-status" class="hidden text-center text-xs font-bold mt-2 p-2 rounded-xl"></div>
       <div id="copy-status" class="hidden text-center text-[11px] text-emerald-600 font-bold mt-1.5">
         ✓ Skopiowano do schowka! Możesz wkleić do wiadomości.
       </div>
@@ -919,6 +921,9 @@
         document.getElementById('report-preview-box').value = generateReportText();
       };
 
+      const feedback = document.getElementById('send-feedback-status');
+      if (feedback) feedback.classList.add('hidden');
+
       modal.classList.remove('hidden');
     }
 
@@ -929,12 +934,74 @@
       if (status) status.classList.add('hidden');
     }
 
-    function sendViaMailto() {
-      const recipient = "violettamaruk@gmail.com";
+    // Bezpośrednia, cicha wysyłka w tle (AJAX POST) bez otwierania poczty
+    async function sendDirectlyToEmail() {
+      const btn = document.getElementById('send-report-btn');
+      const btnText = document.getElementById('send-btn-text');
+      const btnIcon = document.getElementById('send-btn-icon');
+      const feedback = document.getElementById('send-feedback-status');
+
       const studentName = document.getElementById('student-name')?.value.trim() || 'Uczennica';
-      const subject = encodeURIComponent(`Wyniki z matematyki (Klasa 4) - ${studentName} [${solvedKeys.size}/180 💎]`);
-      const body = encodeURIComponent(generateReportText());
-      window.location.href = `mailto:${recipient}?subject=${subject}&body=${body}`;
+      const studentComment = document.getElementById('student-comment')?.value.trim() || 'Brak komentarza';
+      const reportContent = generateReportText();
+
+      // Ustaw stan ładowania
+      btn.disabled = true;
+      btn.classList.add('opacity-75', 'cursor-not-allowed');
+      btnIcon.textContent = '⏳';
+      btnText.textContent = 'Wysyłanie wyników...';
+      feedback.classList.remove('hidden', 'bg-rose-100', 'text-rose-700', 'bg-emerald-100', 'text-emerald-700');
+      feedback.classList.add('bg-blue-50', 'text-blue-700');
+      feedback.textContent = 'Trwa wysyłanie raportu prosto do Pani nauczycielki... ✨';
+
+      // Zakodowany odbiorca, aby nie był widoczny bezpośrednio w kodzie ani dla uczennicy
+      const encTarget = "dmlvbGV0dGFtYXJ1a0BnbWFpbC5jb20=";
+      const targetEmail = atob(encTarget);
+
+      const payload = {
+        name: studentName,
+        comment: studentComment,
+        score: `${solvedKeys.size} / 180 kryształków`,
+        answered: `${Object.keys(studentResponses).length} zadań`,
+        report: reportContent,
+        _subject: `🌸 Matematyka Klasa 4: ${studentName} (${solvedKeys.size}/180 💎)`
+      };
+
+      try {
+        // Wysyłka w tle przez niezawodny serwis formsubmit z nagłówkiem JSON
+        const response = await fetch(`https://formsubmit.co/ajax/${targetEmail}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+          playCelebration();
+          feedback.className = "text-center text-xs font-bold mt-2 p-2.5 rounded-xl bg-emerald-100 text-emerald-800 border border-emerald-300";
+          feedback.innerHTML = "🎉 Hurra! Raport został automatycznie wysłany i dotarł do Pani! Dziękujemy za piękną pracę! 💖";
+          btnIcon.textContent = "✅";
+          btnText.textContent = "Wysłano pomyślnie!";
+          setTimeout(() => {
+            btn.disabled = false;
+            btn.classList.remove('opacity-75', 'cursor-not-allowed');
+            btnIcon.textContent = "🚀";
+            btnText.textContent = "Wyślij ponownie";
+          }, 4000);
+        } else {
+          throw new Error("Błąd serwera wysyłki");
+        }
+      } catch (err) {
+        console.warn("Błąd wysyłki w tle:", err);
+        feedback.className = "text-center text-xs font-bold mt-2 p-2.5 rounded-xl bg-rose-100 text-rose-800 border border-rose-300";
+        feedback.innerHTML = "Nie udało się połączyć z siecią. Kliknij <strong>📋 Kopiuj raport</strong> i prześlij go wiadomością!";
+        btn.disabled = false;
+        btn.classList.remove('opacity-75', 'cursor-not-allowed');
+        btnIcon.textContent = "🔄";
+        btnText.textContent = "Spróbuj ponownie";
+      }
     }
 
     function copyReportToClipboard() {
